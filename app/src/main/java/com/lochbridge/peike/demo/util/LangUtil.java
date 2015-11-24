@@ -20,25 +20,11 @@ public class LangUtil {
     private static final String iso639FileUri = "iso639.csv";
     private static final String LOG_TAG = "LangUtil";
     private static Map<String, String> nameISOMap;
-    private static Context context = null;
+    private static Context mContext = null;
     private static LangUtil singleton = null;
 
-    private LangUtil() {
-    }
-
-
-    public static LangUtil newInstance(Context context) {
-        if (LangUtil.context == null) {
-            LangUtil.context = context;
-            initate();
-        }
-        if (singleton == null) {
-            singleton = new LangUtil();
-        }
-        return singleton;
-    }
-
-    private static void initate() {
+    private LangUtil(Context context) {
+        mContext = context;
         BufferedReader reader = null;
         nameISOMap = new HashMap<>();
         try {
@@ -63,6 +49,14 @@ public class LangUtil {
                 }
             }
         }
+    }
+
+
+    public static LangUtil newInstance(Context context) {
+        if (singleton == null) {
+            singleton = new LangUtil(context);
+        }
+        return singleton;
     }
 
     public String nameToISO639_2(String langName) {
