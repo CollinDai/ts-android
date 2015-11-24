@@ -1,0 +1,46 @@
+list:
+  main:
+    two tab: one "TOP 10", one "LOCAL"
+    show available movies
+      - available: server send ordered list (json) based on user selected (or default) language
+      - future: based on selected (or geo located) theater's availability
+    
+    start playing subtitle directly
+    click movie list item go to start configuration activity
+    pull down to refresh
+  action bar:
+    choose language
+    search subtitle by movie name
+    refresh
+    setting
+    
+movie subtitle detail:
+  main:
+    Poster
+    summary
+    (maybe) IMDB/rotten tomato/douban score
+    title
+    available languages
+      (maybe) allow select multiple
+    
+    button
+      if already downloaded, text: start
+      if not downloaded, text: download
+    
+  menu:
+
+setting:
+  show total size of downloaded subtitle
+  button to remove all downloaded subtitle
+  clear cache
+  
+not sure:
+  where is search bar
+  how accessable is setting
+  whether allow multiple language
+
+maybe:
+  grid view
+  choose theater
+  export subtitle
+  find and play, given name, once found, download and start playing without interaction
