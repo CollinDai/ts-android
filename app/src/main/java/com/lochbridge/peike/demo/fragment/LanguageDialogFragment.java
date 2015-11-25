@@ -35,7 +35,9 @@ public class LanguageDialogFragment extends DialogFragment {
                 }
             }
         });
-        return builder.create();
+        Dialog dialog = builder.create();
+        dialog.setCanceledOnTouchOutside(true);
+        return dialog;
     }
 
     @Override

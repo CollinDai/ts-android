@@ -24,6 +24,12 @@ public class SubListFragment extends ListFragment {
         setEmptyText(getResources().getString(R.string.empty_text_sub));
     }
 
+    @Override
+    public void onListItemClick(ListView l, View v, int position, long id) {
+        // show dialog
+
+    }
+
     public void updateList(List<Subtitle> newList) {
         mAdapter.updateList(newList);
     }

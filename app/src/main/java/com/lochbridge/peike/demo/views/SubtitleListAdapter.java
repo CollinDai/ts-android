@@ -67,8 +67,8 @@ public class SubtitleListAdapter extends BaseAdapter {
             }
             Subtitle subtitle = mSubtitles.get(position);
             holder.subFileName.setText(subtitle.fileName);
+            holder.subtitle = subtitle;
             int flagResId = ResourceUtil.getCountryFlagResId(mContext, subtitle.iso639);
-            Log.d(LOG_TAG, "Flag resource ID: " + flagResId);
             if (flagResId != 0) {
                 holder.langImg.setImageResource(flagResId);
             }
@@ -79,5 +79,6 @@ public class SubtitleListAdapter extends BaseAdapter {
     static class ViewHolder {
         TextView subFileName;
         ImageView langImg;
+        Subtitle subtitle;
     }
 }
