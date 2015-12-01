@@ -3,9 +3,9 @@
     android:layout_width="match_parent"
     android:layout_height="72dp"
     android:orientation="horizontal"
-    android:paddingTop="16dp"
     android:paddingBottom="16dp"
-    android:paddingRight="16dp">
+    android:paddingRight="16dp"
+    android:paddingTop="16dp">
 
     <ImageView
         android:id="@+id/lang_img"
@@ -13,12 +13,14 @@
         android:layout_height="wrap_content"
         android:contentDescription="@string/language"
         android:maxHeight="72dp"
-        android:maxWidth="56dp"/>
+        android:maxWidth="56dp" />
 
     <RelativeLayout
+        android:id="@+id/sub_text_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginLeft="72dp">
+        android:layout_marginLeft="72dp"
+        android:layout_marginRight="56dp">
 
         <TextView
             android:id="@+id/sub_file_name"
@@ -27,13 +29,23 @@
             android:ellipsize="start"
             android:singleLine="true"
             android:textSize="@dimen/font_normal" />
+
         <TextView
             android:id="@+id/duration"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/sub_file_name"
-            android:textSize="@dimen/font_small"/>
+            android:textSize="@dimen/font_small" />
     </RelativeLayout>
+
+    <ImageView
+        android:id="@+id/download_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:background="@android:color/transparent"
+        android:contentDescription="@string/download"
+        android:src="@drawable/ic_file_download_black_24dp" />
 
 
 </RelativeLayout>

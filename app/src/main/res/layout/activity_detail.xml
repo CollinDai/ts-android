@@ -39,11 +39,11 @@
             android:id="@+id/sub_lan"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="?android:selectableItemBackground"
+            android:clickable="true"
             android:gravity="center"
             android:minHeight="@dimen/item_height"
             android:onClick="onLanguageClicked"
-            android:clickable="true"
-            android:background="?android:selectableItemBackground"
             android:orientation="horizontal"
             android:padding="8dp">
 
@@ -60,28 +60,25 @@
                 android:contentDescription="@string/language"
                 android:src="@drawable/ic_language_black_24dp" />
         </LinearLayout>
-        <RelativeLayout
+
+        <FrameLayout
+            android:id="@+id/frag_sub_list"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/sub_lan"
-            android:layout_above="@+id/start_button">
-            <FrameLayout
-                android:id="@+id/frag_sub_list"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-        </RelativeLayout>
-
-        <Button
-            android:id="@+id/start_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
             android:layout_alignParentBottom="true"
-            android:layout_marginBottom="@dimen/spacing_normal"
-            android:layout_marginRight="@dimen/spacing_normal"
-            android:background="@android:color/holo_blue_bright"
-            android:minHeight="@dimen/button_height_large"
-            android:text="@string/start" />
+            android:layout_below="@id/sub_lan" />
+
+        <!--<Button-->
+            <!--android:id="@+id/start_button"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_alignParentBottom="true"-->
+            <!--android:layout_alignParentRight="true"-->
+            <!--android:layout_marginBottom="@dimen/spacing_normal"-->
+            <!--android:layout_marginRight="@dimen/spacing_normal"-->
+            <!--android:background="@android:color/holo_blue_bright"-->
+            <!--android:minHeight="@dimen/button_height_large"-->
+            <!--android:text="@string/start" />-->
 
     </RelativeLayout>
 

@@ -13,6 +13,7 @@ import com.lochbridge.peike.demo.R;
 import com.lochbridge.peike.demo.model.Movie;
 import com.lochbridge.peike.demo.network.NetworkManager;
 import com.lochbridge.peike.demo.util.Constants;
+import com.parse.ParseObject;
 
 import java.util.List;
 
@@ -46,6 +47,10 @@ public class SearchMovieFragment extends BaseMovieListFragment {
     }
 
     private void searchMovie(String movieName) {
+        ParseObject testObject = new ParseObject("TestObject");
+        testObject.put("search", movieName);
+        testObject.saveInBackground();
+
         NetworkManager.search(getActivity().getApplication(), movieName, new NetworkManager.Callback<List<Movie>>() {
             @Override
             public void onResponse(List<Movie> movies) {

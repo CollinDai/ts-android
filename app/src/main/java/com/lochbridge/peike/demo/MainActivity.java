@@ -15,16 +15,21 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.SearchView;
 
 import com.lochbridge.peike.demo.fragment.TabFragment;
+import com.parse.Parse;
+import com.parse.ParseAnalytics;
 
 public class MainActivity extends AppCompatActivity {
     private static final String LOGTAG = "MainActivity";
     private MenuItem mSearchButton;
     private SearchView mSearchView;
     private View mOverlay;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        ParseAnalytics.trackAppOpenedInBackground(getIntent());
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 //        HotSubListFragment fragment = new HotSubListFragment();
         TabFragment fragment = new TabFragment();

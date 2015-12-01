@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
 import com.lochbridge.peike.demo.R;
@@ -59,6 +60,7 @@ public class SubtitleListAdapter extends BaseAdapter {
                 holder = new ViewHolder();
                 holder.subFileName = (TextView) v.findViewById(R.id.sub_file_name);
                 holder.langImg = (ImageView) v.findViewById(R.id.lang_img);
+                holder.downloadIcon = (ImageView) v.findViewById(R.id.download_icon);
                 v.setTag(holder);
 
                 convertView = v;
@@ -68,6 +70,8 @@ public class SubtitleListAdapter extends BaseAdapter {
             Subtitle subtitle = mSubtitles.get(position);
             holder.subFileName.setText(subtitle.fileName);
             holder.subtitle = subtitle;
+            holder.downloadIcon.setTag(subtitle.downloadLink);
+            holder.downloadIcon.setOnClickListener(new DownloadClickListener());
             int flagResId = ResourceUtil.getCountryFlagResId(mContext, subtitle.iso639);
             if (flagResId != 0) {
                 holder.langImg.setImageResource(flagResId);
@@ -75,9 +79,15 @@ public class SubtitleListAdapter extends BaseAdapter {
         }
         return convertView;
     }
-
+    class DownloadClickListener implements View.OnClickListener{
+        @Override
+        public void onClick(View v) {
+            Log.d(LOG_TAG, v.getTag().toString());
+        }
+    }
     static class ViewHolder {
         TextView subFileName;
+        ImageView downloadIcon;
         ImageView langImg;
         Subtitle subtitle;
     }

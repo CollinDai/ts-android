@@ -11,6 +11,10 @@ import android.widget.TextView;
 import com.android.volley.toolbox.NetworkImageView;
 import com.lochbridge.peike.demo.fragment.SearchMovieFragment;
 import com.lochbridge.peike.demo.util.Constants;
+import com.parse.ParseAnalytics;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class SearchActivity extends AppCompatActivity {
     private static final String LOGTAG = "SearchActivity";
@@ -23,6 +27,11 @@ public class SearchActivity extends AppCompatActivity {
         Bundle searchData = intent.getExtras();
         String title = searchData.getString(SearchManager.QUERY);
 //        String[] languages = searchData.getStringArray(Constants.EXTRA_LANGUAGES);
+
+        Map<String, String> dimensions = new HashMap<>();
+        dimensions.put("search", title);
+
+        ParseAnalytics.trackEventInBackground("read", dimensions);
         doMySearch(title);
     }
 
