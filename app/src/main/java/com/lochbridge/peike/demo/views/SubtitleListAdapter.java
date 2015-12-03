@@ -69,7 +69,6 @@ public class SubtitleListAdapter extends BaseAdapter {
             Subtitle subtitle = mSubtitles.get(position);
             holder.subFileName.setText(subtitle.fileName);
             holder.subtitle = subtitle;
-            holder.downloadIcon.setTag(subtitle.downloadLink);
             holder.downloadIcon.setOnClickListener(new DownloadClickListener());
             int flagResId = ResourceUtil.getCountryFlagResId(mContext, subtitle.iso639);
             if (flagResId != 0) {

@@ -15,6 +15,7 @@
         android:layout_alignParentRight="true"
         android:layout_below="@android:id/list"
         android:padding="16dp"
+        android:enabled="false"
         android:text="@string/start"/>
 
     <Button
@@ -24,6 +25,7 @@
         android:layout_toLeftOf="@id/start"
         android:layout_below="@android:id/list"
         android:padding="16dp"
+        android:background="@android:color/transparent"
         android:text="@string/download"/>
 
 </RelativeLayout>

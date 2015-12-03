@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,10 +14,11 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.lochbridge.peike.demo.R;
+import com.lochbridge.peike.demo.io.SubtitleFileManager;
 import com.lochbridge.peike.demo.model.Subtitle;
-import com.lochbridge.peike.demo.network.NetworkManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,8 +29,11 @@ import java.util.List;
 public class SubtitleDialogFragment extends DialogFragment {
     private static final String LOG_TAG = "SubtitleDialogFragment";
     private LayoutInflater mInflater;
+    private Button mStartButton;
+    private Button mDownDelButton;
     private Subtitle mSubtitle;
     private Context context;
+    private boolean isSubExist;
 
     public void setSubtitle(Subtitle subtitle) {
         this.mSubtitle = subtitle;
@@ -40,17 +45,17 @@ public class SubtitleDialogFragment extends DialogFragment {
         if (mSubtitle != null) {
             this.mInflater = getActivity().getLayoutInflater();
             View layout = mInflater.inflate(R.layout.dialog_subtitle, null);
-            Button startButton  = (Button) layout.findViewById(R.id.start);
-            Button downDelButton  = (Button) layout.findViewById(R.id.download_or_delete);
+            mStartButton = (Button) layout.findViewById(R.id.start);
+            mDownDelButton = (Button) layout.findViewById(R.id.download_or_delete);
 
-            startButton.setOnClickListener(new View.OnClickListener() {
+            mStartButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     onStartSubClick(v);
                 }
             });
 
-            downDelButton.setOnClickListener(new View.OnClickListener() {
+            mDownDelButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     onDownOrDelClicked(v);
@@ -65,6 +70,22 @@ public class SubtitleDialogFragment extends DialogFragment {
         Dialog dialog = builder.create();
         dialog.setCanceledOnTouchOutside(true);
         return dialog;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(LOG_TAG, "onViewCreated()");
+        // TODO check if sub file exists
+        // if it does, change download button to delete button and enable start
+        // otherwise do nothing.
+        if (SubtitleFileManager.isSubtitleExist(getActivity(), mSubtitle.fileId)) {
+            this.isSubExist = true;
+            mDownDelButton.setText(R.string.delete);
+            mStartButton.setEnabled(true);
+        } else {
+            this.isSubExist = false;
+        }
     }
 
     private List<Pair<String, String>> getDetailListForAdapter() {
@@ -84,32 +105,45 @@ public class SubtitleDialogFragment extends DialogFragment {
     }
 
     private void onStartSubClick(View view) {
-
+        // start sub view activity, pass the sub file name
+        // as intent arguments.
     }
 
     private void onDownOrDelClicked(View view) {
-        int subId = SubtitleDialogFragment.this.mSubtitle.fileId;
+        int subId = this.mSubtitle.fileId;
         // TODO show progress indicator in this button view
+        if (isSubExist) {
+            boolean result = SubtitleFileManager.deleteSubtitle(getActivity(), subId);
+            Toast.makeText(getActivity(), "Delete " + (result ? "succeed!" : "failed!"), Toast.LENGTH_SHORT).show();
+        } else {
+            // download sub file
+            SubtitleFileManager.downloadSubtitle(getActivity(), subId);
+        }
 
     }
 
     class SubDetailAdapter extends BaseAdapter {
         List<Pair<String, String>> mDetails;
+
         SubDetailAdapter(List<Pair<String, String>> details) {
             this.mDetails = details;
         }
+
         @Override
         public int getCount() {
             return mDetails.size();
         }
+
         @Override
         public Object getItem(int position) {
             return mDetails.get(position);
         }
+
         @Override
         public long getItemId(int position) {
             return 0;
         }
+
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             ViewHolder holder;

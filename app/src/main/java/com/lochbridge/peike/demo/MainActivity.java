@@ -15,6 +15,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.SearchView;
 
 import com.lochbridge.peike.demo.fragment.TabFragment;
+import com.lochbridge.peike.demo.io.LruMovieCache;
 import com.parse.Parse;
 import com.parse.ParseAnalytics;
 
@@ -133,5 +134,10 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return false;
+    }
+
+    @Override
+    public void onDetachedFromWindow() {
+//        LruMovieCache.persistCache();
     }
 }

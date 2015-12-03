@@ -2,14 +2,17 @@ package com.lochbridge.peike.demo.network;
 
 import android.content.Context;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.NetworkImageView;
+import com.android.volley.toolbox.StringRequest;
 import com.lochbridge.peike.demo.model.Movie;
 import com.lochbridge.peike.demo.model.Subtitle;
 
@@ -22,15 +25,16 @@ import java.util.List;
 
 /**
  * Created by PDai on 11/5/2015.
- *
  */
 public class NetworkManager {
     private static final String LOGTAG = "NetworkManager";
     private static final String HOSTNAME = "http://aqueous-falls-1653.herokuapp.com/";
-    private static final String TOPTEN_URL = HOSTNAME + "movie";
-    private static final String SUBTITLE_URL = HOSTNAME + "subtitle";
+    private static final String TOPTEN_URL = HOSTNAME + "movie/";
+    private static final String SUBTITLE_URL = HOSTNAME + "subtitle/";
+    private static final String SUBTITLE_DOWNLOAD_URL = SUBTITLE_URL + "download/";
     private static final int SOCKET_TIMEOUT_MS = 9999;
     private static final int SOCKET_RETRY = 2;
+
     public static void topTen(Context context, final Callback<List<Movie>> callback) {
         JsonArrayRequest request = new JsonArrayRequest(TOPTEN_URL, new Response.Listener<JSONArray>() {
             @Override
@@ -119,7 +123,7 @@ public class NetworkManager {
         if (languages != null && !languages.isEmpty()) {
             langQuery = buildLangQuery(languages);
         }
-        String searchSubUrl = SUBTITLE_URL + "/" + imdbId + langQuery;
+        String searchSubUrl = SUBTITLE_URL + imdbId + langQuery;
         Log.d(LOGTAG, "sub url: " + searchSubUrl);
         JsonArrayRequest request = new JsonArrayRequest(searchSubUrl, new Response.Listener<JSONArray>() {
             @Override
@@ -133,7 +137,6 @@ public class NetworkManager {
                         subtitle.fileId = subResp.getInt("file_id");
                         subtitle.fileName = subResp.getString("file_name");
                         subtitle.fileSize = subResp.getString("file_size");
-                        subtitle.downloadLink = subResp.getString("download_link");
                         subtitle.duration = subResp.getString("duration");
                         subtitle.downloadCount = subResp.getString("download_count");
                         subtitle.language = subResp.getString("language");
@@ -153,6 +156,25 @@ public class NetworkManager {
             }
         });
         VolleySingleton.getInstance(context).addToRequestQueue(request);
+    }
+
+    public static void download(final Context context, int fileId, final Callback<String> callback) {
+        String url = SUBTITLE_DOWNLOAD_URL + fileId;
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        Toast.makeText(context, "Download Success!", Toast.LENGTH_SHORT).show();
+                        callback.onResponse(response);
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                       errorHandler(error);
+                    }
+                });
+        VolleySingleton.getInstance(context).addToRequestQueue(stringRequest);
     }
 
     private static void errorHandler(VolleyError error) {
