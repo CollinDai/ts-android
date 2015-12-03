@@ -12,10 +12,11 @@ public class Subtitle{
     public String fileSize;
     public String duration;
     public String downloadCount;
-    public String downloadLink;
     public int fileId;
+    // used only for select country flag
+    // has nothing to do with language
     public String iso639;
-    public String iso639_2;
+    public String addDate;
 
 //    protected Subtitle(Parcel in) {
 //        fileName = in.readString();

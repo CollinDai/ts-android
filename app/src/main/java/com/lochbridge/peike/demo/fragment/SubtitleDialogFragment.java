@@ -3,7 +3,7 @@ package com.lochbridge.peike.demo.fragment;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
-import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.Pair;
@@ -12,31 +12,37 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.lochbridge.peike.demo.PlayerActivity;
 import com.lochbridge.peike.demo.R;
 import com.lochbridge.peike.demo.io.SubtitleFileManager;
 import com.lochbridge.peike.demo.model.Subtitle;
+import com.lochbridge.peike.demo.network.NetworkManager;
+import com.lochbridge.peike.demo.util.Constants;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by PDai on 11/25/2015.
+ * Subtitle detail dialog.
  */
 public class SubtitleDialogFragment extends DialogFragment {
     private static final String LOG_TAG = "SubtitleDialogFragment";
     private LayoutInflater mInflater;
     private Button mStartButton;
     private Button mDownDelButton;
+    private ImageView mDownloadIcon;
     private Subtitle mSubtitle;
-    private Context context;
     private boolean isSubExist;
 
-    public void setSubtitle(Subtitle subtitle) {
+    public void setArg(ImageView downIcon, Subtitle subtitle) {
         this.mSubtitle = subtitle;
+        this.mDownloadIcon = downIcon;
     }
 
     @Override
@@ -51,14 +57,14 @@ public class SubtitleDialogFragment extends DialogFragment {
             mStartButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    onStartSubClick(v);
+                    onStartSubClick();
                 }
             });
 
             mDownDelButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    onDownOrDelClicked(v);
+                    onDownOrDelClicked();
                 }
             });
 
@@ -80,11 +86,9 @@ public class SubtitleDialogFragment extends DialogFragment {
         // if it does, change download button to delete button and enable start
         // otherwise do nothing.
         if (SubtitleFileManager.isSubtitleExist(getActivity(), mSubtitle.fileId)) {
-            this.isSubExist = true;
-            mDownDelButton.setText(R.string.delete);
-            mStartButton.setEnabled(true);
+            toggleSubDialogButtons(true);
         } else {
-            this.isSubExist = false;
+            toggleSubDialogButtons(false);
         }
     }
 
@@ -95,7 +99,7 @@ public class SubtitleDialogFragment extends DialogFragment {
             add(new Pair<>("File Size", convertByteToKB(mSubtitle.fileSize)));
             add(new Pair<>("Duration", mSubtitle.duration));
             add(new Pair<>("Download Count", mSubtitle.downloadCount));
-
+            add(new Pair<>("Add Date", mSubtitle.addDate));
         }};
     }
 
@@ -104,22 +108,48 @@ public class SubtitleDialogFragment extends DialogFragment {
         return String.format("%.2f", byteValue / 1024D) + " KB";
     }
 
-    private void onStartSubClick(View view) {
+
+    private void onStartSubClick() {
         // start sub view activity, pass the sub file name
         // as intent arguments.
+        Intent intent = new Intent(getActivity(), PlayerActivity.class);
+        intent.putExtra(Constants.EXTRA_SUB_ID, mSubtitle.fileId);
+        startActivity(intent);
     }
 
-    private void onDownOrDelClicked(View view) {
-        int subId = this.mSubtitle.fileId;
+    private void onDownOrDelClicked() {
+        final int subId = this.mSubtitle.fileId;
         // TODO show progress indicator in this button view
         if (isSubExist) {
             boolean result = SubtitleFileManager.deleteSubtitle(getActivity(), subId);
+            if (result) {
+                toggleSubDialogButtons(false);
+            }
             Toast.makeText(getActivity(), "Delete " + (result ? "succeed!" : "failed!"), Toast.LENGTH_SHORT).show();
         } else {
-            // download sub file
-            SubtitleFileManager.downloadSubtitle(getActivity(), subId);
+            SubtitleFileManager.downloadSubtitle(getActivity(), subId, new NetworkManager.Callback<String>() {
+                @Override
+                public void onResponse(String s) {
+                    SubtitleFileManager.putSubtitle(getActivity(), subId, s);
+                    toggleSubDialogButtons(true);
+                }
+            });
         }
 
+    }
+
+    private void toggleSubDialogButtons(boolean hasSub) {
+        if (hasSub) {
+            this.isSubExist = true;
+            mDownDelButton.setText(R.string.delete);
+            mStartButton.setEnabled(true);
+            mDownloadIcon.setVisibility(View.INVISIBLE);
+        } else {
+            this.isSubExist = false;
+            mDownDelButton.setText(R.string.download);
+            mStartButton.setEnabled(false);
+            mDownloadIcon.setVisibility(View.VISIBLE);
+        }
     }
 
     class SubDetailAdapter extends BaseAdapter {

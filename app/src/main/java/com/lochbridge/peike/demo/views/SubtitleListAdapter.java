@@ -1,17 +1,17 @@
 package com.lochbridge.peike.demo.views;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
 import com.lochbridge.peike.demo.R;
+import com.lochbridge.peike.demo.io.SubtitleFileManager;
 import com.lochbridge.peike.demo.model.Subtitle;
+import com.lochbridge.peike.demo.network.NetworkManager;
 import com.lochbridge.peike.demo.util.ResourceUtil;
 
 import java.util.List;
@@ -68,8 +68,13 @@ public class SubtitleListAdapter extends BaseAdapter {
             }
             Subtitle subtitle = mSubtitles.get(position);
             holder.subFileName.setText(subtitle.fileName);
-            holder.subtitle = subtitle;
-            holder.downloadIcon.setOnClickListener(new DownloadClickListener());
+            holder.subtitleIdx = position;
+            if (SubtitleFileManager.isSubtitleExist(mContext, subtitle.fileId)) {
+                holder.downloadIcon.setVisibility(View.INVISIBLE);
+            } else {
+                holder.downloadIcon.setTag(position);
+                holder.downloadIcon.setOnClickListener(new DownloadClickListener());
+            }
             int flagResId = ResourceUtil.getCountryFlagResId(mContext, subtitle.iso639);
             if (flagResId != 0) {
                 holder.langImg.setImageResource(flagResId);
@@ -77,16 +82,25 @@ public class SubtitleListAdapter extends BaseAdapter {
         }
         return convertView;
     }
-    class DownloadClickListener implements View.OnClickListener{
-        @Override
-        public void onClick(View v) {
-            Log.d(LOG_TAG, v.getTag().toString());
-        }
-    }
+
     static class ViewHolder {
         TextView subFileName;
         ImageView downloadIcon;
         ImageView langImg;
-        Subtitle subtitle;
+        int subtitleIdx;
+    }
+
+    class DownloadClickListener implements View.OnClickListener {
+        @Override
+        public void onClick(final View v) {
+            final int subId = mSubtitles.get((Integer) v.getTag()).fileId;
+            SubtitleFileManager.downloadSubtitle(mContext, subId, new NetworkManager.Callback<String>() {
+                @Override
+                public void onResponse(String s) {
+                    SubtitleFileManager.putSubtitle(mContext, subId, s);
+                    v.setVisibility(View.INVISIBLE);
+                }
+            });
+        }
     }
 }

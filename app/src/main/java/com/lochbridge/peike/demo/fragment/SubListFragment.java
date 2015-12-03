@@ -63,7 +63,7 @@ public class SubListFragment extends ListFragment {
 
         Subtitle subtitle = (Subtitle) l.getItemAtPosition(position);
         SubtitleDialogFragment dialog = new SubtitleDialogFragment();
-        dialog.setSubtitle(subtitle);
+        dialog.setArg((ImageView) v.findViewById(R.id.download_icon), subtitle);
         dialog.show(transaction, "dialog");
     }
 

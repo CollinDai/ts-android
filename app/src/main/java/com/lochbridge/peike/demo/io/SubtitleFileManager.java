@@ -20,13 +20,8 @@ public class SubtitleFileManager {
 
     private static final String LOG_TAG = "SubtitleFileManager";
 
-    public static void downloadSubtitle(final Context context, final int subId) {
-        NetworkManager.download(context, subId, new NetworkManager.Callback<String>() {
-            @Override
-            public void onResponse(String s) {
-                SubtitleFileManager.putSubtitle(context, subId, s);
-            }
-        });
+    public static void downloadSubtitle(final Context context, final int subId, NetworkManager.Callback<String> callback) {
+        NetworkManager.download(context, subId, callback);
     }
 
     public static void putSubtitle(Context context, int subId, String subContent) {

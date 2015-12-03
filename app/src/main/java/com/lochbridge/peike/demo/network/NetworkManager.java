@@ -141,7 +141,7 @@ public class NetworkManager {
                         subtitle.downloadCount = subResp.getString("download_count");
                         subtitle.language = subResp.getString("language");
                         subtitle.iso639 = subResp.getString("ISO639");
-                        subtitle.iso639_2 = subResp.getString("ISO639_2");
+                        subtitle.addDate = subResp.getString("add_date");
                         result.add(subtitle);
                     }
                 } catch (JSONException e) {

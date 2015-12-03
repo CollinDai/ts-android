@@ -34,4 +34,5 @@
         <item>Chinese (simplified)</item>
         <item>English</item>
     </string-array>
+    <string name="title_activity_player">PlayerActivity</string>
 </resources>

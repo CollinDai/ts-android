@@ -18,6 +18,7 @@ public class LruMovieCache {
     static {
         movieCache = new LruCache<>(10);
     }
+
     public static void putMovieList(List<Movie> movies) {
         if (movies != null) {
             for (Movie m : movies) {
@@ -37,13 +38,14 @@ public class LruMovieCache {
 
     public static void putSubtitleList(String imdbId, List<Subtitle> subtitles) {
         Movie movie = movieCache.get(imdbId);
-        movie.subtitles = subtitles;
-//        movieCache.put(imdbId, movie);
+        if (movie != null) {
+            movie.subtitles = subtitles;
+        }
     }
 
     public static List<Subtitle> getSubtitleList(String imdbId) {
         Movie movie = movieCache.get(imdbId);
-        return movie.subtitles;
+        return movie == null ? null : movie.subtitles;
     }
 
     public static Subtitle getSubtitle(String imdbId, int subId) {
