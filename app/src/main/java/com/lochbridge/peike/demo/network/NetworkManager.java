@@ -3,6 +3,7 @@ package com.lochbridge.peike.demo.network;
 import android.content.Context;
 import android.util.Log;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
@@ -21,14 +22,15 @@ import java.util.List;
 
 /**
  * Created by PDai on 11/5/2015.
+ *
  */
 public class NetworkManager {
     private static final String LOGTAG = "NetworkManager";
     private static final String HOSTNAME = "http://aqueous-falls-1653.herokuapp.com/";
     private static final String TOPTEN_URL = HOSTNAME + "movie";
     private static final String SUBTITLE_URL = HOSTNAME + "subtitle";
-
-
+    private static final int SOCKET_TIMEOUT_MS = 9999;
+    private static final int SOCKET_RETRY = 2;
     public static void topTen(Context context, final Callback<List<Movie>> callback) {
         JsonArrayRequest request = new JsonArrayRequest(TOPTEN_URL, new Response.Listener<JSONArray>() {
             @Override
@@ -52,11 +54,16 @@ public class NetworkManager {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-
+                errorHandler(error);
             }
         });
+        request.setRetryPolicy(new DefaultRetryPolicy(
+                SOCKET_TIMEOUT_MS,
+                SOCKET_RETRY,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         VolleySingleton.getInstance(context).addToRequestQueue(request);
     }
+
 
     public static void setPoster(NetworkImageView imageView, String imgUrl) {
         Log.d(LOGTAG, "Get thumbnail from: " + imgUrl);
@@ -95,7 +102,7 @@ public class NetworkManager {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-
+                errorHandler(error);
             }
         });
         VolleySingleton.getInstance(context).addToRequestQueue(request);
@@ -142,10 +149,14 @@ public class NetworkManager {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-
+                errorHandler(error);
             }
         });
         VolleySingleton.getInstance(context).addToRequestQueue(request);
+    }
+
+    private static void errorHandler(VolleyError error) {
+        Log.e(LOGTAG, error.getMessage());
     }
 
     private static String buildLangQuery(List<String> languages) {

@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.android.volley.toolbox.NetworkImageView;
 import com.lochbridge.peike.demo.fragment.LanguageDialogFragment;
 import com.lochbridge.peike.demo.fragment.SubListFragment;
+import com.lochbridge.peike.demo.io.LruMovieCache;
 import com.lochbridge.peike.demo.model.Subtitle;
 import com.lochbridge.peike.demo.network.NetworkManager;
 import com.lochbridge.peike.demo.util.Constants;
@@ -31,12 +32,14 @@ public class DetailActivity extends AppCompatActivity implements LanguageDialogF
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
 
-        setupSubListFragment();
 
         Intent intent = getIntent();
         String title = intent.getStringExtra(Constants.EXTRA_TITLE);
+        // TODO get a better poster here
         String posterUrl = intent.getStringExtra(Constants.EXTRA_POSTER_URL);
         mImdbID = intent.getStringExtra(Constants.EXTRA_IMDB_ID);
+
+        setupSubListFragment();
 
         TextView titleView = (TextView) findViewById(R.id.movie_title);
         NetworkImageView posterView = (NetworkImageView) findViewById(R.id.poster);
@@ -46,7 +49,7 @@ public class DetailActivity extends AppCompatActivity implements LanguageDialogF
     }
 
     private void setupSubListFragment() {
-        subListFragment = new SubListFragment();
+        subListFragment = SubListFragment.newInstance(mImdbID);
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
         transaction.replace(R.id.frag_sub_list, subListFragment);
         transaction.commit();
@@ -92,6 +95,7 @@ public class DetailActivity extends AppCompatActivity implements LanguageDialogF
                 if (subtitles != null) {
                     Log.d(LOG_TAG, "Subtitle size: " + subtitles.size());
                     subListFragment.updateList(subtitles);
+                    LruMovieCache.putSubtitleList(DetailActivity.this.mImdbID, subtitles);
                 }
                 DetailActivity.this.subListFragment.setListShownNoAnimation(true);
             }

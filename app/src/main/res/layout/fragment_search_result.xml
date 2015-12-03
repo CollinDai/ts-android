@@ -3,12 +3,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <include layout="@layout/fragment_list" />
+
     <TextView
-        android:id="@+id/search_result_msg"
+        android:id="@+id/empty_id"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
-        android:visibility="gone" />
-
-    <include layout="@layout/fragment_list" />
+        android:textAppearance="?android:attr/textAppearance" />
 </RelativeLayout>

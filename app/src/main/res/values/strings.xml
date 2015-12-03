@@ -28,6 +28,7 @@
     <string name="download">Download</string>
     <string name="pick_lan">Pick a language</string>
     <string name="empty_text_sub">No subtitle found.</string>
+    <string name="loading">Loading...</string>
     <string-array name="language_array">
         <item>Chinese (simplified)</item>
         <item>English</item>

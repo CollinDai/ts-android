@@ -45,6 +45,17 @@ public class SearchMovieFragment extends BaseMovieListFragment {
             searchMovie(mTitle);
         }
     }
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_search_result, container, false);
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        mResultMsg = (TextView) view.findViewById(R.id.empty_id);
+    }
 
     private void searchMovie(String movieName) {
         ParseObject testObject = new ParseObject("TestObject");
@@ -65,15 +76,4 @@ public class SearchMovieFragment extends BaseMovieListFragment {
         });
     }
 
-    @Nullable
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_search_result, container, false);
-    }
-
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        mResultMsg = (TextView) view.findViewById(R.id.search_result_msg);
-    }
 }

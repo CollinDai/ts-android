@@ -12,4 +12,5 @@ public class Constants {
 
     public static final String PREFIX_RES_FLAG = "ic_flag_";
     public static final String ARG_SUBTITLE = "ARG_SUBTITLE";
+    public static final String ARG_IMDB_ID = "ARG_IMDB_ID";
 }

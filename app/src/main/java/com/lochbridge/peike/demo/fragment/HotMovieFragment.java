@@ -7,8 +7,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.lochbridge.peike.demo.R;
+import com.lochbridge.peike.demo.io.LruMovieCache;
 import com.lochbridge.peike.demo.model.Movie;
 import com.lochbridge.peike.demo.network.NetworkManager;
 
@@ -20,14 +22,8 @@ import java.util.List;
 public class HotMovieFragment extends BaseMovieListFragment {
     private static final String LOG_TAG = "HotMovieFragment";
     private SwipeRefreshLayout mSwipeRefreshLayout;
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        // call server to get list
-        Log.d(LOG_TAG, "Call server to initiate list");
-        getTopTen();
-    }
+    private TextView mEmptyText;
+    private View mLoadingIndicator;
 
     @Nullable
     @Override
@@ -38,24 +34,41 @@ public class HotMovieFragment extends BaseMovieListFragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mSwipeRefreshLayout = (SwipeRefreshLayout) view;
+        mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swiperefresh);
+        mEmptyText = (TextView) view.findViewById(R.id.empty_id);
+        mLoadingIndicator = view.findViewById(R.id.progressContainer);
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 Log.i(LOG_TAG, "onRefresh called from SwipeRefreshLayout");
-                getTopTen();
+                getTopTen(true);
             }
         });
+        getTopTen(false);
     }
 
-    private void getTopTen() {
+    public void getTopTen(boolean pulled) {
+        if (!pulled) {
+            // App initiative loading
+            Log.d(LOG_TAG, mLoadingIndicator == null ? "NULL" : "NOT NULL");
+            if (mLoadingIndicator != null) {
+                mLoadingIndicator.setVisibility(View.VISIBLE);
+            }
+        }
         NetworkManager.topTen(getActivity().getApplication(), new NetworkManager.Callback<List<Movie>>() {
             @Override
             public void onResponse(List<Movie> movies) {
-                mMovieListAdapter.updateList(movies);
+                if (movies != null && !movies.isEmpty()) {
+                    mMovieListAdapter.updateList(movies);
+                    LruMovieCache.putMovieList(movies);
+                } else {
+                    mEmptyText.setText("No movie found.");
+                }
                 if (HotMovieFragment.this.mSwipeRefreshLayout.isRefreshing()) {
                     HotMovieFragment.this.mSwipeRefreshLayout.setRefreshing(false);
                 }
+                if (mLoadingIndicator != null)
+                    mLoadingIndicator.setVisibility(View.GONE);
             }
         });
     }

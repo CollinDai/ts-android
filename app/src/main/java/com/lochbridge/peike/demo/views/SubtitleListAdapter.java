@@ -54,7 +54,6 @@ public class SubtitleListAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         if (mSubtitles != null && !mSubtitles.isEmpty()) {
             ViewHolder holder;
-            Log.d(LOG_TAG, "subtitle passed to adapter");
             if (convertView == null) {
                 View v = mInflater.inflate(R.layout.list_item_subtitle, parent, false);
                 holder = new ViewHolder();

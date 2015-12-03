@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,5 +35,11 @@ public class TabFragment extends Fragment {
         mViewPager.setAdapter(new TabPagerAdapter(getFragmentManager()));
         mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(mTabLayout));
         mTabLayout.setupWithViewPager(mViewPager);
+    }
+
+    public void refreshHotMovieList() {
+//        FragmentPagerAdapter pagerAdapter = (FragmentPagerAdapter) mViewPager.getAdapter();
+//        HotMovieFragment fragment = (HotMovieFragment) pagerAdapter.getItem(0);
+//        fragment.getTopTen(false);
     }
 }

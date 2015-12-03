@@ -12,6 +12,7 @@ import com.lochbridge.peike.demo.io.LruBitmapCache;
  * Created by PDai on 11/5/2015.
  */
 public class VolleySingleton {
+    private static final int CACHE_SIZE_BYTE = 2 * 1024 * 1024;
     private static VolleySingleton mInstance;
     private static Context mCtx;
     private RequestQueue mRequestQueue;
@@ -21,7 +22,7 @@ public class VolleySingleton {
         mCtx = context;
         mRequestQueue = getRequestQueue();
 
-        mImageLoader = new ImageLoader(mRequestQueue, new LruBitmapCache(20));
+        mImageLoader = new ImageLoader(mRequestQueue, new LruBitmapCache(CACHE_SIZE_BYTE));
     }
 
     public static synchronized VolleySingleton getInstance(Context context) {

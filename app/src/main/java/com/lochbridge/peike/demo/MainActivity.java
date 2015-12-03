@@ -23,6 +23,7 @@ public class MainActivity extends AppCompatActivity {
     private MenuItem mSearchButton;
     private SearchView mSearchView;
     private View mOverlay;
+    private TabFragment mTabFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,8 +33,8 @@ public class MainActivity extends AppCompatActivity {
         ParseAnalytics.trackAppOpenedInBackground(getIntent());
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 //        HotSubListFragment fragment = new HotSubListFragment();
-        TabFragment fragment = new TabFragment();
-        transaction.replace(R.id.main_frag, fragment);
+        mTabFragment = new TabFragment();
+        transaction.replace(R.id.main_frag, mTabFragment);
         transaction.commit();
 
         mOverlay = findViewById(R.id.overlay);
@@ -123,6 +124,7 @@ public class MainActivity extends AppCompatActivity {
 //            case R.id.action_language:
 //                break;
             case R.id.action_refresh:
+                mTabFragment.refreshHotMovieList();
                 break;
             case R.id.action_settings:
                 break;
