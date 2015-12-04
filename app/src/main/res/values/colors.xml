@@ -2,11 +2,11 @@
 <resources>
 
     <!-- grayscale -->
-    <color name="white"     >#FFFFFF</color>
+    <color name="white">#FFFFFF</color>
     <color name="gray_light">#DBDBDB</color>
-    <color name="gray"      >#939393</color>
-    <color name="gray_dark" >#5F5F5F</color>
-    <color name="black"     >#323232</color>
+    <color name="gray">#939393</color>
+    <color name="gray_dark">#5F5F5F</color>
+    <color name="black">#323232</color>
 
     <!-- basic colors -->
     <color name="green">#27D34D</color>
@@ -21,4 +21,9 @@
     <color name="gradient_start">#00000000</color>
     <color name="gradient_end">#c0000000</color>
 
+    <color name="colorPrimary">@color/material_blue_500</color>
+
+    <color name="material_blue_500">#2196F3</color>
+    <color name="material_blue_700">#1976D2</color>
+    <color name="material_green_A200">#A5D6A7</color>
 </resources>

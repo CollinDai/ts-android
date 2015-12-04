@@ -6,12 +6,7 @@ import android.util.Log;
 import com.lochbridge.peike.demo.network.NetworkManager;
 import com.lochbridge.peike.demo.util.StorageUtil;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
 
 /**
  * Created by PDai on 12/2/2015.
@@ -28,7 +23,7 @@ public class SubtitleFileManager {
         StorageUtil.writeToInternal(context, String.valueOf(subId), subContent);
     }
 
-    public String getSubtitle(Context context, int subId) {
+    public static String getSubtitle(Context context, int subId) {
        return StorageUtil.readFromInternal(context, String.valueOf(subId));
     }
 
