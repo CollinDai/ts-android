@@ -2,12 +2,7 @@ package com.lochbridge.peike.demo;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.TextView;
 
-import com.lochbridge.peike.demo.io.SubtitleFileManager;
 import com.lochbridge.peike.demo.util.Constants;
 
 public class PlayerActivity extends AppCompatActivity {
@@ -18,29 +13,5 @@ public class PlayerActivity extends AppCompatActivity {
         setContentView(R.layout.activity_player);
 
         int subId = getIntent().getIntExtra(Constants.EXTRA_SUB_ID, 0);
-        TextView textView = (TextView) findViewById(R.id.sub_text);
-        textView.setText(SubtitleFileManager.getSubtitle(this, subId));
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_player, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 }

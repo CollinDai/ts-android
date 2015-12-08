@@ -60,7 +60,8 @@ public class MovieListAdapter extends BaseAdapter {
                 v.setTag(holder);
 
                 holder.primaryText = (TextView) v.findViewById(R.id.primary_text);
-                holder.secondaryText = (TextView) v.findViewById(R.id.secondary_text);
+                holder.imdbRating = (TextView) v.findViewById(R.id.imdb_rating);
+                holder.doubanRating = (TextView) v.findViewById(R.id.douban_rating);
                 holder.imageView = (NetworkImageView) v.findViewById(R.id.item_avatar);
                 convertView = v;
             } else {
@@ -68,7 +69,9 @@ public class MovieListAdapter extends BaseAdapter {
             }
             Movie m = mHotMovies.get(position);
             holder.primaryText.setText(m.title);
-            holder.secondaryText.setText(m.imdbId);
+            holder.imdbRating.setText(m.imdbRating);
+            holder.doubanRating.setText(m.doubanRating);
+            holder.primaryText.setTag(m.imdbId);
             if (URLUtil.isValidUrl(m.posterUrl)) {
                 NetworkManager.setPoster(holder.imageView, m.posterUrl);
             }
@@ -79,6 +82,7 @@ public class MovieListAdapter extends BaseAdapter {
     static class ViewHolder {
         NetworkImageView imageView;
         TextView primaryText;
-        TextView secondaryText;
+        TextView imdbRating;
+        TextView doubanRating;
     }
 }

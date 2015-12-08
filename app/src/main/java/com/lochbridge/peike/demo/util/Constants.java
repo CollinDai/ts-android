@@ -14,4 +14,5 @@ public class Constants {
     public static final String ARG_SUBTITLE = "ARG_SUBTITLE";
     public static final String ARG_IMDB_ID = "ARG_IMDB_ID";
     public static final String EXTRA_SUB_ID = "EXTRA_SUB_ID";
+    public static final String ARG_PLAYER_THEME = "ARG_PLAYER_THEME";
 }

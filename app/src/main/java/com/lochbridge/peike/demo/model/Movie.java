@@ -11,6 +11,8 @@ public class Movie {
     public String title;
     public String posterUrl;
     public String imdbId;
+    public String doubanRating;
+    public String imdbRating;
     public Bitmap posterBitmap;
     public List<Subtitle> subtitles;
 }

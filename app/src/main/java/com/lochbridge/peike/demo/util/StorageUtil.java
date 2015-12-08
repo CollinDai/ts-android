@@ -4,6 +4,7 @@ import android.content.Context;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -38,5 +39,15 @@ public class StorageUtil {
             e.printStackTrace();
         }
         return result;
+    }
+
+    public static FileInputStream readStreamFromInternal(Context context, String fileName) {
+        FileInputStream fis = null;
+        try {
+            fis = context.openFileInput(fileName);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        return fis;
     }
 }

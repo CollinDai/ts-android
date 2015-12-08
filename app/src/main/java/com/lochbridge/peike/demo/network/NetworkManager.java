@@ -48,6 +48,8 @@ public class NetworkManager {
                         movie.title = movieResp.getString("title");
                         movie.imdbId = movieResp.getString("imdb_id");
                         movie.posterUrl = movieResp.getString("poster_url");
+                        movie.doubanRating = movieResp.getString("douban_rating");
+                        movie.imdbRating = movieResp.getString("imdb_rating");
                         result.add(movie);
                     }
                 } catch (JSONException e) {

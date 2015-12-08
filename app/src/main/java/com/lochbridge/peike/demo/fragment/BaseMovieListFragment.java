@@ -33,17 +33,16 @@ public class BaseMovieListFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View viewClicked, int position, long id) {
                 Log.d(LOG_TAG, position+ " clicked");
                 TextView titleView = (TextView) viewClicked.findViewById(R.id.primary_text);
-                TextView imdbIdView = (TextView) viewClicked.findViewById(R.id.secondary_text);
                 NetworkImageView posterView = (NetworkImageView) viewClicked.findViewById(R.id.item_avatar);
 
                 String title = titleView.getText().toString();
-                String imdbId = imdbIdView.getText().toString();
+                String imdbId = (String) titleView.getTag();
                 String posterUrl = posterView.getImageURL();
 
                 Intent intent = new Intent(getActivity(), DetailActivity.class);
                 intent.putExtra(Constants.EXTRA_TITLE, title);
-                intent.putExtra(Constants.EXTRA_POSTER_URL, posterUrl);
                 intent.putExtra(Constants.EXTRA_IMDB_ID, imdbId);
+                intent.putExtra(Constants.EXTRA_POSTER_URL, posterUrl);
                 startActivity(intent);
             }
         });

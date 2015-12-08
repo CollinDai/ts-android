@@ -19,7 +19,7 @@ import android.widget.Toast;
 
 import com.lochbridge.peike.demo.PlayerActivity;
 import com.lochbridge.peike.demo.R;
-import com.lochbridge.peike.demo.io.SubtitleFileManager;
+import com.lochbridge.peike.demo.manager.SubtitleFileManager;
 import com.lochbridge.peike.demo.model.Subtitle;
 import com.lochbridge.peike.demo.network.NetworkManager;
 import com.lochbridge.peike.demo.util.Constants;
