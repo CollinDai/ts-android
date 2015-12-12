@@ -118,16 +118,11 @@ public class SimplePlayerFragment extends PlayerFragment {
 
         @Override
         public void run() {
-            String subtitleContent = SubtitleFileManager.getSubtitle(mContext, subFileId);
-            List<SRTItem> subDataObjList = SubtitleFileManager.convertToList(subtitleContent);
+            List<SRTItem> subDataObjList = SubtitleFileManager.getSRTItem(mContext, subFileId);
             for (final SRTItem srtItem : subDataObjList) {
                 if (stopFlag) break;
-                SimplePlayerFragment.this.subMsgHandler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        SimplePlayerFragment.this.changeText(srtItem.text);
-                    }
-                }, srtItem.startTimeMilli);
+                Message msg = subMsgHandler.obtainMessage(123, srtItem.text);
+                subMsgHandler.sendMessageDelayed(msg, srtItem.startTimeMilli);
             }
         }
     }

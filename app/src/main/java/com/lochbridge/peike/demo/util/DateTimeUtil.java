@@ -8,7 +8,7 @@ public class DateTimeUtil {
         int commaIdx = timecode.lastIndexOf(',');
         String seconds = timecode.substring(0, commaIdx);
         String milliSeconds = timecode.substring(commaIdx + 1);
-        String[] times = seconds.split(",");
+        String[] times = seconds.split(":");
 
         int result = 3600000 * Integer.valueOf(times[0]) +
                         60000 * Integer.valueOf(times[1]) +

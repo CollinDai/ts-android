@@ -9,7 +9,11 @@ import com.lochbridge.peike.demo.network.NetworkManager;
 import com.lochbridge.peike.demo.util.DateTimeUtil;
 import com.lochbridge.peike.demo.util.StorageUtil;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,34 +38,55 @@ public class SubtitleFileManager {
         return StorageUtil.readFromInternal(context, String.valueOf(subId));
     }
 
-    public static List<SRTItem> convertToList(String subtitleContent) {
-        String[] lines = subtitleContent.split("\\r?\\n");
-        List<SRTItem> subDataObjList = new ArrayList<>();
-        SRTItem srtItem = null;
-        for (int i = 0; i < lines.length; ++i) {
-            if (threadStopFlag) break;
-            String line = lines[i].trim();
-            Log.d(LOG_TAG, line);
-            if (line.equals("")) {
-                if (srtItem != null) {
-                    subDataObjList.add(srtItem);
+
+    public static List<SRTItem> getSRTItem(Context context, int subId) {
+        List<SRTItem> result = new ArrayList<>();
+        try {
+            String fileName = String.valueOf(subId);
+            FileInputStream fis = StorageUtil.readStreamFromInternal(context, fileName);
+            BufferedReader br = new BufferedReader(new InputStreamReader(fis));
+            String line;
+            String prevLine = "";
+            SRTItem srtItem = null;
+            while ((line = br.readLine()) != null) {
+                if (isItemNumber(line, prevLine)) {
+                    if (srtItem != null) {
+                        result.add(srtItem);
+                    }
+                    srtItem = new SRTItem();
+                    srtItem.number = Integer.valueOf(line);
+                } else if (isTimeCode(line)) {
+                    int splitterIdx = line.indexOf("-->");
+                    String startTimecode = line.substring(0, splitterIdx).trim();
+                    String endTimecode = line.substring(splitterIdx + 3).trim();
+                    srtItem.startTimeMilli = DateTimeUtil.timecodeToMillisecond(startTimecode);
+                    srtItem.endTimeMilli = DateTimeUtil.timecodeToMillisecond(endTimecode);
+                } else if (!line.isEmpty()) {
+                    srtItem.text = srtItem.text == null ? line : srtItem.text + line;
                 }
-            } else if (TextUtils.isDigitsOnly(line) && (i - 1 < 0 || (lines[i - 1].trim().equals("")))) {
-                srtItem = new SRTItem();
-                srtItem.number = Integer.valueOf(line);
-            } else if (line.matches("\\d{2}:\\d{2}:\\d{2},\\d{3} --> \\d{2}:\\d{2}:\\d{2}:,\\d{3}")) {
-                int splitterIdx = line.indexOf("-->");
-                String startTimecode = line.substring(0, splitterIdx).trim();
-                String endTimecode = line.substring(splitterIdx + 3).trim();
-                srtItem.startTimeMilli = DateTimeUtil.timecodeToMillisecond(startTimecode);
-                Log.d(LOG_TAG, "Start Time" + srtItem.startTimeMilli);
-                srtItem.endTimeMilli = DateTimeUtil.timecodeToMillisecond(endTimecode);
-            } else {
-                srtItem.text = srtItem.text == null ? line : srtItem.text + line;
+                prevLine = line;
             }
-            subDataObjList.add(srtItem);
+            if (srtItem != null)
+                result.add(srtItem);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (NullPointerException ne) {
+            return new ArrayList<>();
         }
-        return subDataObjList;
+        return result;
+    }
+
+    private static boolean isItemNumber(String line, String prevLine) {
+        for (char c : line.toCharArray()) {
+            if (c < '0' || c > '9') {
+                return false;
+            }
+        }
+        return "".equals(prevLine);
+    }
+
+    private static boolean isTimeCode(String line) {
+        return line.matches("\\d{2}:\\d{2}:\\d{2},\\d{3} --> \\d{2}:\\d{2}:\\d{2},\\d{3}");
     }
 
     public static boolean isSubtitleExist(Context context, int subId) {
