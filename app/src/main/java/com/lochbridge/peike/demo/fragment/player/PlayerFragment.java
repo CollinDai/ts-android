@@ -1,9 +1,9 @@
 package com.lochbridge.peike.demo.fragment.player;
 
 
+import android.app.Fragment;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,37 +11,34 @@ import android.view.ViewGroup;
 import com.lochbridge.peike.demo.model.SRTItem;
 import com.lochbridge.peike.demo.util.Constants;
 
+import java.util.List;
+
 /**
  * A simple {@link Fragment} subclass.
  */
 public abstract class PlayerFragment extends Fragment {
     public static final int SIMPLE_THEME = 0;
-
+    protected List<SRTItem> mSubContent;
     public PlayerFragment() {
         // Required empty public constructor
     }
 
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        int theme = getArguments().getInt(Constants.ARG_PLAYER_THEME);
-        if (theme == SIMPLE_THEME) {
-        }
-        return null;
-    }
-
-
-    class ReadFileTask extends AsyncTask<String, SRTItem, Void> {
+    class ReadFileTask extends AsyncTask<String, SRTItem, Boolean> {
 
         @Override
-        protected Void doInBackground(String... params) {
-            return null;
+        protected Boolean doInBackground(String... params) {
+            SRTItem srtItem = new SRTItem();
+
+            // TODO read sub content from file
+            // and then construct SRTItem from it.
+
+            publishProgress(srtItem);
+            return true;
         }
 
         @Override
         protected void onProgressUpdate(SRTItem... values) {
-            super.onProgressUpdate(values);
+            mSubContent.add(values[0]);
         }
     }
 

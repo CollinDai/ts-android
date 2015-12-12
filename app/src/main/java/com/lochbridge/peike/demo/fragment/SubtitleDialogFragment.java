@@ -109,6 +109,10 @@ public class SubtitleDialogFragment extends DialogFragment {
     }
 
 
+    /**
+     * TODO return command to activity to start player
+     * instead of starting from this fragment
+     */
     private void onStartSubClick() {
         // start sub view activity, pass the sub file name
         // as intent arguments.
