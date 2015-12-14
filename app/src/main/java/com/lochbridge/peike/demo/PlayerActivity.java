@@ -4,6 +4,7 @@ import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
+import com.lochbridge.peike.demo.fragment.TimerFragment;
 import com.lochbridge.peike.demo.fragment.player.PlayerFragment;
 import com.lochbridge.peike.demo.fragment.player.SimplePlayerFragment;
 import com.lochbridge.peike.demo.util.Constants;
@@ -24,8 +25,11 @@ public class PlayerActivity extends AppCompatActivity {
                 playerFragment = SimplePlayerFragment.newInstance(subId);
         }
 
+        TimerFragment timerFragment = new TimerFragment();
+
         FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.frag_player, playerFragment);
+        fragmentTransaction.replace(R.id.frag_timer, timerFragment);
         fragmentTransaction.commit();
     }
 }

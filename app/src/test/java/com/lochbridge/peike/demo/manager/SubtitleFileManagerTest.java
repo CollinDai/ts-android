@@ -23,6 +23,7 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.util.List;
 
 /**
@@ -35,14 +36,14 @@ public class SubtitleFileManagerTest {
     @Mock
     Context mMockContext;
     FileInputStream fis;
+    FileOutputStream fos;
     String pwd;
 
     @Before
     public void setUp() throws Exception {
 
-        fis = new FileInputStream(new File("src/test/res/test_long.srt"));
-        when(mMockContext.openFileInput(anyString()))
-                .thenReturn(fis);
+
+
     }
 
     @Test
@@ -53,9 +54,33 @@ public class SubtitleFileManagerTest {
     }
 
     @Test
-    public void testConvert() throws Exception {
-
-        List<SRTItem> result = SubtitleFileManager.getSRTItem(mMockContext,12345);
+    public void testLongSrt() throws Exception {
+        fis = new FileInputStream(new File("src/test/assets/test_long.srt"));
+        when(mMockContext.openFileInput(anyString()))
+                .thenReturn(fis);
+        List<SRTItem> result = SubtitleFileManager.getSRTItem(mMockContext, 12345);
+        System.out.println(result.get(0).text);
+        System.out.println(result.get(0).number);
         assertThat(result.size(),equalTo(2015));
+    }
+
+    @Test
+    public void testNormalSrt() throws Exception {
+        fis = new FileInputStream(new File("src/test/assets/test_normal.srt"));
+        when(mMockContext.openFileInput(anyString()))
+                .thenReturn(fis);
+        List<SRTItem> result = SubtitleFileManager.getSRTItem(mMockContext, 12345);
+        System.out.println(result.get(0).text);
+        System.out.println(result.get(0).number);
+        assertThat(result.size(), equalTo(1274));
+    }
+
+    @Test
+    public void testWriteSrtWithoutBOM() throws Exception {
+        fos = new FileOutputStream(new File("src/test/assets/test_output.srt"));
+        when(mMockContext.openFileOutput(anyString(), anyInt()))
+                .thenReturn(fos);
+        String content = "\uFEFF123445";
+        SubtitleFileManager.putSubtitle(mMockContext, 12345, content);
     }
 }

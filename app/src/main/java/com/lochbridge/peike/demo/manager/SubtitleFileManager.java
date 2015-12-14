@@ -44,24 +44,27 @@ public class SubtitleFileManager {
         try {
             String fileName = String.valueOf(subId);
             FileInputStream fis = StorageUtil.readStreamFromInternal(context, fileName);
-            BufferedReader br = new BufferedReader(new InputStreamReader(fis));
+            BufferedReader br = new BufferedReader(new InputStreamReader(fis, "UTF-8"));
+            Log.d(LOG_TAG, "Open file to reader: " + fileName);
             String line;
             String prevLine = "";
             SRTItem srtItem = null;
+            int counter = 0;
             while ((line = br.readLine()) != null) {
+                Log.d(LOG_TAG, line);
                 if (isItemNumber(line, prevLine)) {
                     if (srtItem != null) {
                         result.add(srtItem);
                     }
                     srtItem = new SRTItem();
                     srtItem.number = Integer.valueOf(line);
-                } else if (isTimeCode(line)) {
+                } else if (isTimeCode(line) && srtItem != null) {
                     int splitterIdx = line.indexOf("-->");
                     String startTimecode = line.substring(0, splitterIdx).trim();
                     String endTimecode = line.substring(splitterIdx + 3).trim();
                     srtItem.startTimeMilli = DateTimeUtil.timecodeToMillisecond(startTimecode);
                     srtItem.endTimeMilli = DateTimeUtil.timecodeToMillisecond(endTimecode);
-                } else if (!line.isEmpty()) {
+                } else if (!line.isEmpty() && srtItem != null) {
                     srtItem.text = srtItem.text == null ? line : srtItem.text + line;
                 }
                 prevLine = line;
@@ -71,12 +74,14 @@ public class SubtitleFileManager {
         } catch (IOException e) {
             e.printStackTrace();
         } catch (NullPointerException ne) {
+            ne.printStackTrace();
             return new ArrayList<>();
         }
         return result;
     }
 
     private static boolean isItemNumber(String line, String prevLine) {
+        if (line == null || line.isEmpty()) return false;
         for (char c : line.toCharArray()) {
             if (c < '0' || c > '9') {
                 return false;
@@ -86,6 +91,7 @@ public class SubtitleFileManager {
     }
 
     private static boolean isTimeCode(String line) {
+        if (line == null || line.isEmpty()) return false;
         return line.matches("\\d{2}:\\d{2}:\\d{2},\\d{3} --> \\d{2}:\\d{2}:\\d{2},\\d{3}");
     }
 

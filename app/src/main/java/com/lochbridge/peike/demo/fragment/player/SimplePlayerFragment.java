@@ -6,6 +6,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.text.Html;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +24,7 @@ import java.util.List;
  * Created by Peike on 12/7/2015.
  */
 public class SimplePlayerFragment extends PlayerFragment {
+    private static final String LOG_TAG = "SimplePlayerFragment";
     private TextView subTextView;
     private int mSubId;
     private SubMsgHandler subMsgHandler;
@@ -53,6 +55,7 @@ public class SimplePlayerFragment extends PlayerFragment {
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         startPlaying();
         changeText(String.valueOf(mSubId));
     }
@@ -77,10 +80,12 @@ public class SimplePlayerFragment extends PlayerFragment {
     @Override
     public void onStop() {
         super.onStop();
+        Log.d(LOG_TAG, "Stop player.");
         subMsgHandler.removeCallbacksAndMessages(null);
         thread.stopFlag = true;
         try {
             thread.join();
+            Log.d(LOG_TAG, "Thread stopped successfully");
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -119,9 +124,10 @@ public class SimplePlayerFragment extends PlayerFragment {
         @Override
         public void run() {
             List<SRTItem> subDataObjList = SubtitleFileManager.getSRTItem(mContext, subFileId);
+            Log.d(LOG_TAG, "SRT Item number: " + subDataObjList.size());
             for (final SRTItem srtItem : subDataObjList) {
                 if (stopFlag) break;
-                Message msg = subMsgHandler.obtainMessage(123, srtItem.text);
+                Message msg = subMsgHandler.obtainMessage(Constants.MSG_SRT_TEXT, srtItem.text);
                 subMsgHandler.sendMessageDelayed(msg, srtItem.startTimeMilli);
             }
         }
