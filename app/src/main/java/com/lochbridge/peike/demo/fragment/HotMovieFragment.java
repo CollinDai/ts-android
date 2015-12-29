@@ -1,5 +1,6 @@
 package com.lochbridge.peike.demo.fragment;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -45,6 +46,12 @@ public class HotMovieFragment extends BaseMovieListFragment {
             }
         });
         getTopTen(false);
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        Log.d(LOG_TAG, "onAttach()");
+        super.onAttach(context);
     }
 
     public void getTopTen(boolean pulled) {

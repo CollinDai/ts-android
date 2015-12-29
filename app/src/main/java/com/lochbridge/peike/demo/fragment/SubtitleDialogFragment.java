@@ -41,8 +41,8 @@ public class SubtitleDialogFragment extends DialogFragment {
     private boolean isSubExist;
 
     public void setArg(ImageView downIcon, Subtitle subtitle) {
-        this.mSubtitle = subtitle;
         this.mDownloadIcon = downIcon;
+        this.mSubtitle = subtitle;
     }
 
     @Override
@@ -60,7 +60,6 @@ public class SubtitleDialogFragment extends DialogFragment {
                     onStartSubClick();
                 }
             });
-
             mDownDelButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -82,9 +81,6 @@ public class SubtitleDialogFragment extends DialogFragment {
     public void onResume() {
         super.onResume();
         Log.d(LOG_TAG, "onViewCreated()");
-        // TODO check if sub file exists
-        // if it does, change download button to delete button and enable start
-        // otherwise do nothing.
         if (SubtitleFileManager.isSubtitleExist(getActivity(), mSubtitle.fileId)) {
             toggleSubDialogButtons(true);
         } else {

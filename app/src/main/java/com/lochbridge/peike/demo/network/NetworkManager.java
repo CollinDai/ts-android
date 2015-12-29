@@ -180,7 +180,8 @@ public class NetworkManager {
     }
 
     private static void errorHandler(VolleyError error) {
-        Log.e(LOGTAG, error.getMessage());
+        error.printStackTrace();
+        Log.e(LOGTAG, "Error code: " + error.networkResponse.statusCode);
     }
 
     private static String buildLangQuery(List<String> languages) {

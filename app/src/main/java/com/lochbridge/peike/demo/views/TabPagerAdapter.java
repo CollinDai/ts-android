@@ -7,10 +7,8 @@ import android.support.v4.app.FragmentPagerAdapter;
 import com.lochbridge.peike.demo.fragment.HotMovieFragment;
 import com.lochbridge.peike.demo.fragment.LocalMovieFragment;
 
-/**
- * Created by PDai on 10/16/2015.
- */
 public class TabPagerAdapter extends FragmentPagerAdapter {
+    private Fragment hotMovieFragment;
 
     public TabPagerAdapter(FragmentManager fm) {
         super(fm);
@@ -25,17 +23,18 @@ public class TabPagerAdapter extends FragmentPagerAdapter {
     public CharSequence getPageTitle(int position) {
         switch (position) {
             default:
-            case 0: return "HOT";
-            case 1: return "LOCAL";
+            case 0:
+                return "HOT";
+            case 1:
+                return "LOCAL";
         }
     }
-
 
     @Override
     public Fragment getItem(int i) {
         if (i == 0) {
-            HotMovieFragment fragment = new HotMovieFragment();
-            return fragment;
+            hotMovieFragment = new HotMovieFragment();
+            return hotMovieFragment;
         } else {
             return new LocalMovieFragment();
         }
