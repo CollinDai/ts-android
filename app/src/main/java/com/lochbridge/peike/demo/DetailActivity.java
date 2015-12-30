@@ -13,19 +13,27 @@ import android.widget.TextView;
 import com.android.volley.toolbox.NetworkImageView;
 import com.lochbridge.peike.demo.fragment.LanguageDialogFragment;
 import com.lochbridge.peike.demo.fragment.SubListFragment;
+import com.lochbridge.peike.demo.fragment.SubtitleDialogFragment;
 import com.lochbridge.peike.demo.io.LruMovieCache;
+import com.lochbridge.peike.demo.model.Movie;
 import com.lochbridge.peike.demo.model.Subtitle;
 import com.lochbridge.peike.demo.network.NetworkManager;
 import com.lochbridge.peike.demo.util.Constants;
 import com.lochbridge.peike.demo.util.LangUtil;
+import com.lochbridge.peike.demo.util.StorageUtil;
 
 import java.util.List;
 
-public class DetailActivity extends AppCompatActivity implements LanguageDialogFragment.LanguageDialogListener {
+public class DetailActivity extends AppCompatActivity implements LanguageDialogFragment.LanguageDialogListener,
+        SubtitleDialogFragment.OnFragmentInteractionListener {
 
     private static final String LOG_TAG = "DetailActivity";
     private String mImdbID;
     private SubListFragment subListFragment;
+    private String mPosterUrl;
+    private String mTitle;
+    private String mImdbRating;
+    private String mDoubanRating;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,18 +42,20 @@ public class DetailActivity extends AppCompatActivity implements LanguageDialogF
 
 
         Intent intent = getIntent();
-        String title = intent.getStringExtra(Constants.EXTRA_TITLE);
+        mTitle = intent.getStringExtra(Constants.EXTRA_TITLE);
         // TODO get a better poster here
-        String posterUrl = intent.getStringExtra(Constants.EXTRA_POSTER_URL);
+        // TODO use Movie model here
+        mPosterUrl = intent.getStringExtra(Constants.EXTRA_POSTER_URL);
         mImdbID = intent.getStringExtra(Constants.EXTRA_IMDB_ID);
-
+        mImdbRating = intent.getStringExtra(Constants.EXTRA_IMDB_RATING);
+        mDoubanRating = intent.getStringExtra(Constants.EXTRA_DOUBAN_RATING);
         setupSubListFragment();
 
         TextView titleView = (TextView) findViewById(R.id.movie_title);
         NetworkImageView posterView = (NetworkImageView) findViewById(R.id.poster);
 
-        titleView.setText(title);
-        NetworkManager.setPoster(posterView, posterUrl);
+        titleView.setText(mTitle);
+        NetworkManager.setPoster(posterView, mPosterUrl);
     }
 
     private void setupSubListFragment() {
@@ -100,5 +110,16 @@ public class DetailActivity extends AppCompatActivity implements LanguageDialogF
                 DetailActivity.this.subListFragment.setListShownNoAnimation(true);
             }
         });
+    }
+
+    @Override
+    public void persistMovieToDB() {
+        Movie movie = new Movie();
+        movie.imdbId = this.mImdbID;
+        movie.posterUrl = this.mPosterUrl;
+        movie.title = this.mTitle;
+        movie.imdbRating = this.mImdbRating;
+        movie.doubanRating = this.mDoubanRating;
+        StorageUtil.writeMovieToDB(this, movie);
     }
 }

@@ -1,5 +1,6 @@
 package com.lochbridge.peike.demo.fragment;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
@@ -17,12 +18,14 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.lochbridge.peike.demo.DetailActivity;
 import com.lochbridge.peike.demo.PlayerActivity;
 import com.lochbridge.peike.demo.R;
 import com.lochbridge.peike.demo.manager.SubtitleFileManager;
 import com.lochbridge.peike.demo.model.Subtitle;
 import com.lochbridge.peike.demo.network.NetworkManager;
 import com.lochbridge.peike.demo.util.Constants;
+import com.lochbridge.peike.demo.util.StorageUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,6 +42,8 @@ public class SubtitleDialogFragment extends DialogFragment {
     private ImageView mDownloadIcon;
     private Subtitle mSubtitle;
     private boolean isSubExist;
+
+    private OnFragmentInteractionListener mListener;
 
     public void setArg(ImageView downIcon, Subtitle subtitle) {
         this.mDownloadIcon = downIcon;
@@ -88,6 +93,20 @@ public class SubtitleDialogFragment extends DialogFragment {
         }
     }
 
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        if (activity instanceof DetailActivity) {
+            mListener = (DetailActivity) activity;
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mListener = null;
+    }
+
     private List<Pair<String, String>> getDetailListForAdapter() {
         return new ArrayList<Pair<String, String>>() {{
             add(new Pair<>("File Name", mSubtitle.fileName));
@@ -123,6 +142,9 @@ public class SubtitleDialogFragment extends DialogFragment {
         if (isSubExist) {
             boolean result = SubtitleFileManager.deleteSubtitle(getActivity(), subId);
             if (result) {
+                //TODO delete subtitle from db, if no more subtitle
+                // from movie, then delete movie.
+                StorageUtil.deleteSubtitle(getActivity(), subId);
                 toggleSubDialogButtons(false);
             }
             Toast.makeText(getActivity(), "Delete " + (result ? "succeed!" : "failed!"), Toast.LENGTH_SHORT).show();
@@ -134,6 +156,8 @@ public class SubtitleDialogFragment extends DialogFragment {
                         Log.d(LOG_TAG, "Downloaded file has BOM.");
                     }
                     SubtitleFileManager.putSubtitle(getActivity(), subId, s);
+                    StorageUtil.writeSubtitleToDB(getActivity(), mSubtitle);
+                    mListener.persistMovieToDB();
                     toggleSubDialogButtons(true);
                 }
             });
@@ -198,5 +222,9 @@ public class SubtitleDialogFragment extends DialogFragment {
             TextView detailName;
             TextView detailValue;
         }
+    }
+
+    public interface OnFragmentInteractionListener {
+        void persistMovieToDB();
     }
 }

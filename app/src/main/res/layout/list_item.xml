@@ -13,19 +13,6 @@
         android:contentDescription="@string/poster_image"
         android:src="@android:drawable/ic_menu_gallery" />
 
-    <!--<TextView-->
-        <!--android:id="@+id/secondary_text"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-
-        <!--android:layout_alignParentBottom="true"-->
-        <!--android:layout_toRightOf="@id/item_avatar"-->
-        <!--android:ellipsize="marquee"-->
-        <!--android:paddingBottom="20dp"-->
-        <!--android:paddingLeft="16dp"-->
-        <!--android:singleLine="true"-->
-        <!--android:text="Secondary Text"-->
-        <!--android:textSize="14sp" />-->
 
     <TextView
         android:id="@+id/primary_text"
@@ -42,42 +29,13 @@
         android:paddingTop="14dp"
         android:text="Primary Text"
         android:textSize="16sp" />
-    <LinearLayout
-        android:id="@+id/secondary_text"
-        android:layout_width="match_parent"
+
+    <include
+        layout="@layout/fragment_rating"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_toRightOf="@id/item_avatar"
-        android:paddingBottom="14dp"
-        android:paddingLeft="16dp"
-        android:orientation="horizontal"
-        android:singleLine="true">
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_imdb"
-            android:contentDescription="@string/imdb" />
-        <TextView
-            android:id="@+id/imdb_rating"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-
-            android:padding="4dp"
-            android:text="7.8/10"/>
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-
-            android:layout_marginLeft="8dp"
-            android:src="@drawable/ic_douban"
-            android:contentDescription="@string/douban" />
-        <TextView
-            android:id="@+id/douban_rating"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="4dp"
-            android:text="6.3/10"/>
-    </LinearLayout>
+        android:layout_toRightOf="@id/item_avatar" />
 
 
 </RelativeLayout>

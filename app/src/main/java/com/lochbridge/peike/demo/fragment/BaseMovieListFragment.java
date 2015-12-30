@@ -23,7 +23,7 @@ public class BaseMovieListFragment extends Fragment {
     protected MovieListAdapter mMovieListAdapter;
 
     @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
+    public void onViewCreated(final View view, Bundle savedInstanceState) {
         Log.d(LOG_TAG, "onViewCreated");
         ListView listView = (ListView) view.findViewById(android.R.id.list);
         mMovieListAdapter = new MovieListAdapter(getActivity());
@@ -34,15 +34,21 @@ public class BaseMovieListFragment extends Fragment {
                 Log.d(LOG_TAG, position+ " clicked");
                 TextView titleView = (TextView) viewClicked.findViewById(R.id.primary_text);
                 NetworkImageView posterView = (NetworkImageView) viewClicked.findViewById(R.id.item_avatar);
+                TextView imdbRatingView = (TextView) viewClicked.findViewById(R.id.imdb_rating);
+                TextView doubanRatingView = (TextView) viewClicked.findViewById(R.id.douban_rating);
 
                 String title = titleView.getText().toString();
                 String imdbId = (String) titleView.getTag();
                 String posterUrl = posterView.getImageURL();
+                String imdbRating = imdbRatingView.getText().toString();
+                String doubanRating = doubanRatingView.getText().toString();
 
                 Intent intent = new Intent(getActivity(), DetailActivity.class);
                 intent.putExtra(Constants.EXTRA_TITLE, title);
                 intent.putExtra(Constants.EXTRA_IMDB_ID, imdbId);
                 intent.putExtra(Constants.EXTRA_POSTER_URL, posterUrl);
+                intent.putExtra(Constants.EXTRA_IMDB_RATING, imdbRating);
+                intent.putExtra(Constants.EXTRA_DOUBAN_RATING, doubanRating);
                 startActivity(intent);
             }
         });

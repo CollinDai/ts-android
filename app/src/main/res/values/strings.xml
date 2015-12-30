@@ -38,4 +38,5 @@
     <string name="imdb">IMDb</string>
     <string name="douban">Douban</string>
     <string name="colon">:</string>
+    <string name="empty_local">No local subtitles found.</string>
 </resources>

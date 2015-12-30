@@ -136,6 +136,7 @@ public class NetworkManager {
                     for (int i = 0; i < response.length(); ++i) {
                         Subtitle subtitle = new Subtitle();
                         JSONObject subResp = response.getJSONObject(i);
+                        subtitle.imdbId = subResp.getString("imdb_id");
                         subtitle.fileId = subResp.getInt("file_id");
                         subtitle.fileName = subResp.getString("file_name");
                         subtitle.fileSize = subResp.getString("file_size");

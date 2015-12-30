@@ -1,6 +1,7 @@
 package com.lochbridge.peike.demo.fragment;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -8,38 +9,19 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.GridView;
 import android.widget.TextView;
 
 import com.lochbridge.peike.demo.R;
+import com.lochbridge.peike.demo.util.StorageUtil;
+import com.lochbridge.peike.demo.views.LocalMovieAdapter;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link LocalMovieFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link LocalMovieFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class LocalMovieFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String LOG_TAG = "LocalMovieFragment";
+    private LocalMovieAdapter localMovieAdapter;
+    private GridView localGridView;
+    private TextView emptyLocalTextView;
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
-    private OnFragmentInteractionListener mListener;
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment LocalMovieFragment.
-     */
-    // TODO: Rename and change types and number of parameters
     public static LocalMovieFragment newInstance(String param1, String param2) {
         LocalMovieFragment fragment = new LocalMovieFragment();
         Bundle args = new Bundle();
@@ -47,40 +29,40 @@ public class LocalMovieFragment extends Fragment {
         return fragment;
     }
 
-    public LocalMovieFragment() {
-        // Required empty public constructor
-    }
-
     @Override
     public void onResume() {
         super.onResume();
         // TODO udpate view by checking local db;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+        refreshLocalView();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        TextView textView = new TextView(getActivity());
-        textView.setText(R.string.hello_blank_fragment);
-        return textView;
+        return inflater.inflate(R.layout.fragment_grid, container, false);
+
     }
 
     @Override
-    public void onAttach(Context context) {
-        Log.d(LOG_TAG, "onAttach()");
-        super.onAttach(context);
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        localGridView = (GridView) view.findViewById(R.id.local_gridview);
+        emptyLocalTextView = (TextView) view.findViewById(R.id.empty_local_textview);
+        refreshLocalView();
     }
 
-    @Override
-    public void onDetach() {
-        Log.d(LOG_TAG, "onDetach()");
-        super.onDetach();
-        mListener = null;
+    private void refreshLocalView() {
+        Cursor cursor = StorageUtil.getReadableMovieCursor(getActivity());
+        if (cursor != null && cursor.getCount() > 0) {
+            if (localMovieAdapter == null) {
+                localMovieAdapter = new LocalMovieAdapter(getActivity(), cursor);
+                localGridView.setAdapter(localMovieAdapter);
+            } else {
+                localMovieAdapter.swapCursor(cursor);
+            }
+        } else {
+            emptyLocalTextView.setVisibility(View.VISIBLE);
+        }
     }
 
     /**

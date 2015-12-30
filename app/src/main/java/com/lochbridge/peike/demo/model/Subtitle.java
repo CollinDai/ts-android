@@ -7,6 +7,7 @@ import android.os.Parcelable;
  * Created by PDai on 11/19/2015.
  */
 public class Subtitle{
+    public String imdbId;
     public String fileName;
     public String language;
     public String fileSize;

@@ -50,9 +50,6 @@ public class MovieListAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        // check if poster/name/lan is cached
-        // if not then call server to download
-        // if yes then get view from cache and display
         if (mHotMovies != null && !mHotMovies.isEmpty()) {
             ViewHolder holder = new ViewHolder();
             if (convertView == null) {
