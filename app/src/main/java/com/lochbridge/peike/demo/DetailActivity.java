@@ -28,12 +28,8 @@ public class DetailActivity extends AppCompatActivity implements LanguageDialogF
         SubtitleDialogFragment.OnFragmentInteractionListener {
 
     private static final String LOG_TAG = "DetailActivity";
-    private String mImdbID;
     private SubListFragment subListFragment;
-    private String mPosterUrl;
-    private String mTitle;
-    private String mImdbRating;
-    private String mDoubanRating;
+    private Movie mMovie;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,24 +38,25 @@ public class DetailActivity extends AppCompatActivity implements LanguageDialogF
 
 
         Intent intent = getIntent();
-        mTitle = intent.getStringExtra(Constants.EXTRA_TITLE);
+        mMovie = new Movie();
+        mMovie.title = intent.getStringExtra(Constants.EXTRA_TITLE);
         // TODO get a better poster here
         // TODO use Movie model here
-        mPosterUrl = intent.getStringExtra(Constants.EXTRA_POSTER_URL);
-        mImdbID = intent.getStringExtra(Constants.EXTRA_IMDB_ID);
-        mImdbRating = intent.getStringExtra(Constants.EXTRA_IMDB_RATING);
-        mDoubanRating = intent.getStringExtra(Constants.EXTRA_DOUBAN_RATING);
+        mMovie.posterUrl = intent.getStringExtra(Constants.EXTRA_POSTER_URL);
+        mMovie.imdbId = intent.getStringExtra(Constants.EXTRA_IMDB_ID);
+        mMovie.imdbRating = intent.getStringExtra(Constants.EXTRA_IMDB_RATING);
+        mMovie.doubanRating = intent.getStringExtra(Constants.EXTRA_DOUBAN_RATING);
         setupSubListFragment();
 
         TextView titleView = (TextView) findViewById(R.id.movie_title);
         NetworkImageView posterView = (NetworkImageView) findViewById(R.id.poster);
 
-        titleView.setText(mTitle);
-        NetworkManager.setPoster(posterView, mPosterUrl);
+        titleView.setText(mMovie.title);
+        NetworkManager.setPoster(posterView, mMovie.posterUrl);
     }
 
     private void setupSubListFragment() {
-        subListFragment = SubListFragment.newInstance(mImdbID);
+        subListFragment = SubListFragment.newInstance(mMovie.imdbId);
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
         transaction.replace(R.id.frag_sub_list, subListFragment);
         transaction.commit();
@@ -99,13 +96,13 @@ public class DetailActivity extends AppCompatActivity implements LanguageDialogF
         // expect list of subtitle name and links
         languages = LangUtil.newInstance(this).nameToISO639_2(languages);
         subListFragment.setListShownNoAnimation(false);
-        NetworkManager.searchSubtitle(this, this.mImdbID, languages, new NetworkManager.Callback<List<Subtitle>>() {
+        NetworkManager.searchSubtitle(this, this.mMovie.imdbId, languages, new NetworkManager.Callback<List<Subtitle>>() {
             @Override
             public void onResponse(List<Subtitle> subtitles) {
                 if (subtitles != null) {
                     Log.d(LOG_TAG, "Subtitle size: " + subtitles.size());
                     subListFragment.updateList(subtitles);
-                    LruMovieCache.putSubtitleList(DetailActivity.this.mImdbID, subtitles);
+                    LruMovieCache.putSubtitleList(DetailActivity.this.mMovie.imdbId, subtitles);
                 }
                 DetailActivity.this.subListFragment.setListShownNoAnimation(true);
             }
@@ -114,12 +111,7 @@ public class DetailActivity extends AppCompatActivity implements LanguageDialogF
 
     @Override
     public void persistMovieToDB() {
-        Movie movie = new Movie();
-        movie.imdbId = this.mImdbID;
-        movie.posterUrl = this.mPosterUrl;
-        movie.title = this.mTitle;
-        movie.imdbRating = this.mImdbRating;
-        movie.doubanRating = this.mDoubanRating;
-        StorageUtil.writeMovieToDB(this, movie);
+        if (StorageUtil.isMovieExist(this, this.mMovie.imdbId)) return;
+        StorageUtil.writeMovieToDB(this, mMovie);
     }
 }

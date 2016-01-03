@@ -5,6 +5,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import com.lochbridge.peike.demo.database.MovieSubtitleContract;
 import com.lochbridge.peike.demo.database.MovieSubtitleDatabase;
@@ -21,11 +22,15 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by PDai on 12/3/2015.
  */
 public class StorageUtil {
+    private static final String LOG_TAG = "StorageUtil";
+
     public static void writeToInternal(Context context, String fileName, String fileContent) {
         Writer out = null;
         try {
@@ -81,18 +86,69 @@ public class StorageUtil {
         return fis;
     }
 
+
+    /*
+     * Database manipulations below
+     */
+
     public static Cursor getReadableMovieCursor(Context context) {
-        MovieSubtitleDatabase openHelper = new MovieSubtitleDatabase(context);
+        MovieSubtitleDatabase openHelper = MovieSubtitleDatabase.newInstance(context);
         SQLiteDatabase db = openHelper.getReadableDatabase();
         //TODO refactor this
-        return db.rawQuery("SELECT * FROM movies WHERE imdb_id IN (SELECT DISTINCT IMDB_ID FROM subtitles)", null);
+        Cursor cursor = db.rawQuery("SELECT * FROM movies WHERE imdb_id IN (SELECT DISTINCT IMDB_ID FROM subtitles)", null);
+        return cursor;
+    }
+
+    public static List<Movie> readAllLocalMovies(Context context) {
+        MovieSubtitleDatabase openHelper = MovieSubtitleDatabase.newInstance(context);
+        SQLiteDatabase db = openHelper.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM movies WHERE imdb_id IN (SELECT DISTINCT IMDB_ID FROM subtitles)", null);
+        List<Movie> result = new ArrayList<>();
+        if (cursor != null && cursor.moveToFirst()) {
+            while (!cursor.isAfterLast()) {
+                Movie m = new Movie();
+                m.imdbId = cursor.getString(cursor.getColumnIndexOrThrow(MovieSubtitleContract.Movies.IMDB_ID));
+                m.title = cursor.getString(cursor.getColumnIndexOrThrow(MovieSubtitleContract.Movies.TITLE));
+                m.imdbRating = cursor.getString(cursor.getColumnIndexOrThrow(MovieSubtitleContract.Movies.IMDB_RATING));
+                m.doubanRating = cursor.getString(cursor.getColumnIndexOrThrow(MovieSubtitleContract.Movies.DOUBAN_RATING));
+                m.posterUrl = cursor.getString(cursor.getColumnIndexOrThrow(MovieSubtitleContract.Movies.POSTER_URL));
+                result.add(m);
+                cursor.moveToNext();
+            }
+            cursor.close();
+        }
+        return result;
+    }
+
+    public static List<Subtitle> readAllSubtitlesFromDBByImdbId(Context context, String imdbId) {
+        MovieSubtitleDatabase openHelper = MovieSubtitleDatabase.newInstance(context);
+        SQLiteDatabase db = openHelper.getReadableDatabase();
+        Cursor cursor = db.query(MovieSubtitleDatabase.SUBTITLES, null, "IMDB_ID=?", new String[]{imdbId}, null, null, null);
+        List<Subtitle> result = new ArrayList<>();
+        if (cursor.moveToFirst()) {
+            while (!cursor.isAfterLast()) {
+                Subtitle newSub = new Subtitle();
+                newSub.imdbId = cursor.getString(cursor.getColumnIndexOrThrow(MovieSubtitleContract.Subtitles.IMDB_ID));
+                newSub.fileId = cursor.getInt(cursor.getColumnIndexOrThrow(MovieSubtitleContract.Subtitles.FILE_ID));
+                newSub.fileName = cursor.getString(cursor.getColumnIndexOrThrow(MovieSubtitleContract.Subtitles.FILE_NAME));
+                newSub.fileSize = cursor.getInt(cursor.getColumnIndexOrThrow(MovieSubtitleContract.Subtitles.FILE_SIZE));
+                newSub.duration = cursor.getString(cursor.getColumnIndexOrThrow(MovieSubtitleContract.Subtitles.DURATION));
+                newSub.downloadCount = cursor.getInt(cursor.getColumnIndexOrThrow(MovieSubtitleContract.Subtitles.DOWNLOAD_COUNT));
+                newSub.language = cursor.getString(cursor.getColumnIndexOrThrow(MovieSubtitleContract.Subtitles.LANGUAGE));
+                newSub.iso639 = cursor.getString(cursor.getColumnIndexOrThrow(MovieSubtitleContract.Subtitles.ISO639));
+                newSub.addDate = cursor.getString(cursor.getColumnIndexOrThrow(MovieSubtitleContract.Subtitles.ADD_DATE));
+                result.add(newSub);
+                cursor.moveToNext();
+            }
+        }
+        cursor.close();
+        return result;
     }
 
     public static void writeSubtitleToDB(Context context, Subtitle mSubtitle) {
-        MovieSubtitleDatabase openHelper = new MovieSubtitleDatabase(context);
+        MovieSubtitleDatabase openHelper = MovieSubtitleDatabase.newInstance(context);
         SQLiteDatabase db = openHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put(MovieSubtitleContract.Subtitles.IMDB_ID, mSubtitle.imdbId);
         values.put(MovieSubtitleContract.Subtitles.IMDB_ID, mSubtitle.imdbId);
         values.put(MovieSubtitleContract.Subtitles.FILE_ID, mSubtitle.fileId);
         values.put(MovieSubtitleContract.Subtitles.FILE_NAME, mSubtitle.fileName);
@@ -106,7 +162,7 @@ public class StorageUtil {
     }
 
     public static void writeMovieToDB(Context context, Movie movie) {
-        MovieSubtitleDatabase openHelper = new MovieSubtitleDatabase(context);
+        MovieSubtitleDatabase openHelper = MovieSubtitleDatabase.newInstance(context);
         SQLiteDatabase db = openHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(MovieSubtitleContract.Movies.IMDB_ID, movie.imdbId);
@@ -115,14 +171,34 @@ public class StorageUtil {
         values.put(MovieSubtitleContract.Movies.DOUBAN_RATING, movie.doubanRating);
         values.put(MovieSubtitleContract.Movies.IMDB_RATING, movie.imdbRating);
         long rowId = db.insertOrThrow(MovieSubtitleDatabase.MOVIES, null, values);
+        Log.d(LOG_TAG, "Movie is inserted to row " + rowId);
     }
 
-    public static void deleteSubtitle(Context context, int subId) {
-        MovieSubtitleDatabase openHelper = new MovieSubtitleDatabase(context);
+    public static void deleteSubtitle(Context context, String imdbId, int subId) {
+        MovieSubtitleDatabase openHelper = MovieSubtitleDatabase.newInstance(context);
         SQLiteDatabase db = openHelper.getWritableDatabase();
         db.delete(MovieSubtitleDatabase.SUBTITLES,
                 MovieSubtitleContract.Subtitles.FILE_ID + "= ?",
                 new String[]{String.valueOf(subId)});
         // TODO: 12/30/2015 check if movie still has subtitle, if not then remove movie
+        Cursor cursor = db.rawQuery("SELECT * FROM subtitles WHERE IMDB_ID = ? ", new String[]{imdbId});
+        if (cursor != null && cursor.getCount() == 0) {
+            int rows = db.delete(MovieSubtitleDatabase.MOVIES,
+                    MovieSubtitleContract.Movies.IMDB_ID + "= ?",
+                    new String[]{imdbId});
+            Log.d(LOG_TAG, rows + " rows of movies are deleted");
+        }
+        cursor.close();
+    }
+
+    public static void deleteMovie(Context context, String imdbId) {
+
+    }
+
+    public static boolean isMovieExist(Context context, String mImdbID) {
+        MovieSubtitleDatabase openHelper = MovieSubtitleDatabase.newInstance(context);
+        SQLiteDatabase db = openHelper.getWritableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM movies WHERE IMDB_ID = ? ", new String[]{mImdbID});
+        return cursor != null && cursor.getCount() > 0;
     }
 }

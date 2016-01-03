@@ -9,14 +9,22 @@ import android.provider.BaseColumns;
  * Created by Peike on 12/28/2015.
  */
 public class MovieSubtitleDatabase extends SQLiteOpenHelper {
-
+    private static MovieSubtitleDatabase singleton = null;
     public static final int DATABASE_VERSION = 1;
     public static final String DATABASE_NAME = "MovieSubtitle.db";
     public static final String MOVIES = "movies";
     public static final String SUBTITLES = "subtitles";
+    private boolean isInitiated = false;
 
-    public MovieSubtitleDatabase(Context context) {
+    private MovieSubtitleDatabase(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
+    }
+
+    public static MovieSubtitleDatabase newInstance(Context context) {
+        if (singleton == null) {
+            singleton = new MovieSubtitleDatabase(context);
+        }
+        return singleton;
     }
 
     @Override
@@ -48,4 +56,6 @@ public class MovieSubtitleDatabase extends SQLiteOpenHelper {
 
         onCreate(db);
     }
+
+
 }

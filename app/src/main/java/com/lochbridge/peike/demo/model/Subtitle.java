@@ -10,9 +10,9 @@ public class Subtitle{
     public String imdbId;
     public String fileName;
     public String language;
-    public String fileSize;
+    public int fileSize;
     public String duration;
-    public String downloadCount;
+    public int downloadCount;
     public int fileId;
     // used only for select country flag
     // has nothing to do with language

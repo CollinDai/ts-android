@@ -13,8 +13,11 @@ import android.widget.GridView;
 import android.widget.TextView;
 
 import com.lochbridge.peike.demo.R;
+import com.lochbridge.peike.demo.model.Movie;
 import com.lochbridge.peike.demo.util.StorageUtil;
 import com.lochbridge.peike.demo.views.LocalMovieAdapter;
+
+import java.util.List;
 
 public class LocalMovieFragment extends Fragment {
     private static final String LOG_TAG = "LocalMovieFragment";
@@ -48,21 +51,15 @@ public class LocalMovieFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         localGridView = (GridView) view.findViewById(R.id.local_gridview);
         emptyLocalTextView = (TextView) view.findViewById(R.id.empty_local_textview);
-        refreshLocalView();
+        localMovieAdapter = new LocalMovieAdapter(getActivity());
+        localGridView.setAdapter(localMovieAdapter);
+//        refreshLocalView();
     }
 
     private void refreshLocalView() {
-        Cursor cursor = StorageUtil.getReadableMovieCursor(getActivity());
-        if (cursor != null && cursor.getCount() > 0) {
-            if (localMovieAdapter == null) {
-                localMovieAdapter = new LocalMovieAdapter(getActivity(), cursor);
-                localGridView.setAdapter(localMovieAdapter);
-            } else {
-                localMovieAdapter.swapCursor(cursor);
-            }
-        } else {
-            emptyLocalTextView.setVisibility(View.VISIBLE);
-        }
+        List<Movie> movies = StorageUtil.readAllLocalMovies(getActivity());
+        localMovieAdapter.udpateGrid(movies);
+        emptyLocalTextView.setVisibility(movies.isEmpty() ? View.VISIBLE: View.GONE);
     }
 
     /**

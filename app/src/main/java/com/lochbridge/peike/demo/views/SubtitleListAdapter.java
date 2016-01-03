@@ -8,11 +8,13 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.lochbridge.peike.demo.DetailActivity;
 import com.lochbridge.peike.demo.R;
 import com.lochbridge.peike.demo.manager.SubtitleFileManager;
 import com.lochbridge.peike.demo.model.Subtitle;
 import com.lochbridge.peike.demo.network.NetworkManager;
 import com.lochbridge.peike.demo.util.ResourceUtil;
+import com.lochbridge.peike.demo.util.StorageUtil;
 
 import java.util.List;
 
@@ -21,7 +23,7 @@ import java.util.List;
  */
 public class SubtitleListAdapter extends BaseAdapter {
     private static final String LOG_TAG = "SubtitleListAdapter";
-    List<Subtitle> mSubtitles;
+    private List<Subtitle> mSubtitles;
     private LayoutInflater mInflater;
     private Context mContext;
 
@@ -93,11 +95,18 @@ public class SubtitleListAdapter extends BaseAdapter {
     class DownloadClickListener implements View.OnClickListener {
         @Override
         public void onClick(final View v) {
-            final int subId = mSubtitles.get((Integer) v.getTag()).fileId;
+            int index = (Integer) v.getTag();
+            final Subtitle subtitle = mSubtitles.get(index);
+            final int subId = subtitle.fileId;
             SubtitleFileManager.downloadSubtitle(mContext, subId, new NetworkManager.Callback<String>() {
                 @Override
                 public void onResponse(String s) {
                     SubtitleFileManager.putSubtitle(mContext, subId, s);
+                    StorageUtil.writeSubtitleToDB(mContext, subtitle);
+                    if (mContext instanceof DetailActivity) {
+                        DetailActivity activity = (DetailActivity) mContext;
+                        activity.persistMovieToDB();
+                    }
                     v.setVisibility(View.INVISIBLE);
                 }
             });

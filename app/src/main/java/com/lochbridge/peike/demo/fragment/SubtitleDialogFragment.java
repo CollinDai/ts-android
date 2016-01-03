@@ -105,6 +105,7 @@ public class SubtitleDialogFragment extends DialogFragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+
     }
 
     private List<Pair<String, String>> getDetailListForAdapter() {
@@ -113,13 +114,13 @@ public class SubtitleDialogFragment extends DialogFragment {
             add(new Pair<>("Language", mSubtitle.language));
             add(new Pair<>("File Size", convertByteToKB(mSubtitle.fileSize)));
             add(new Pair<>("Duration", mSubtitle.duration));
-            add(new Pair<>("Download Count", mSubtitle.downloadCount));
+            add(new Pair<>("Download Count", String.valueOf(mSubtitle.downloadCount)));
             add(new Pair<>("Add Date", mSubtitle.addDate));
         }};
     }
 
-    private String convertByteToKB(String b) {
-        double byteValue = Double.valueOf(b);
+    private String convertByteToKB(int b) {
+        double byteValue = (double)b;
         return String.format("%.2f", byteValue / 1024D) + " KB";
     }
 
@@ -138,13 +139,14 @@ public class SubtitleDialogFragment extends DialogFragment {
 
     private void onDownOrDelClicked() {
         final int subId = this.mSubtitle.fileId;
+        final String imdbId = this.mSubtitle.imdbId;
         // TODO show progress indicator in this button view
         if (isSubExist) {
             boolean result = SubtitleFileManager.deleteSubtitle(getActivity(), subId);
             if (result) {
                 //TODO delete subtitle from db, if no more subtitle
                 // from movie, then delete movie.
-                StorageUtil.deleteSubtitle(getActivity(), subId);
+                StorageUtil.deleteSubtitle(getActivity(), imdbId, subId);
                 toggleSubDialogButtons(false);
             }
             Toast.makeText(getActivity(), "Delete " + (result ? "succeed!" : "failed!"), Toast.LENGTH_SHORT).show();

@@ -139,9 +139,9 @@ public class NetworkManager {
                         subtitle.imdbId = subResp.getString("imdb_id");
                         subtitle.fileId = subResp.getInt("file_id");
                         subtitle.fileName = subResp.getString("file_name");
-                        subtitle.fileSize = subResp.getString("file_size");
+                        subtitle.fileSize = subResp.getInt("file_size");
                         subtitle.duration = subResp.getString("duration");
-                        subtitle.downloadCount = subResp.getString("download_count");
+                        subtitle.downloadCount = subResp.getInt("download_count");
                         subtitle.language = subResp.getString("language");
                         subtitle.iso639 = subResp.getString("ISO639");
                         subtitle.addDate = subResp.getString("add_date");
