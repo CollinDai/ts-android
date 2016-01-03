@@ -5,7 +5,7 @@
     android:orientation="vertical">
 
     <com.android.volley.toolbox.NetworkImageView
-        android:id="@+id/grid_poster"
+        android:id="@+id/item_avatar"
         android:layout_width="200dp"
         android:layout_height="300dp"
         android:contentDescription="@string/poster_image" />
@@ -14,14 +14,13 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
         <TextView
-            android:id="@+id/gridview_title"
+            android:id="@+id/primary_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingLeft="8dp"
             android:paddingRight="8dp"
             android:paddingTop="8dp"
-            android:textSize="16sp"
-            android:text="This is the title"/>
+            android:textSize="16sp"/>
 
         <include layout="@layout/fragment_rating"/>
     </LinearLayout>

@@ -5,6 +5,19 @@
     android:orientation="vertical"
     tools:context="com.lochbridge.peike.demo.DetailActivity">
 
+    <!--<FrameLayout-->
+        <!--android:id="@+id/loadingPanel"-->
+        <!--style="@style/GenericProgressBackground"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:gon-->
+        <!--android:layout_gravity="center">-->
+
+        <!--<ProgressBar-->
+            <!--style="@style/GenericProgressIndicator"-->
+            <!--android:layout_gravity="center" />-->
+    <!--</FrameLayout>-->
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -67,19 +80,6 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_below="@id/sub_lan" />
-
-        <!--<Button-->
-            <!--android:id="@+id/start_button"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_alignParentBottom="true"-->
-            <!--android:layout_alignParentRight="true"-->
-            <!--android:layout_marginBottom="@dimen/spacing_normal"-->
-            <!--android:layout_marginRight="@dimen/spacing_normal"-->
-            <!--android:background="@android:color/holo_blue_bright"-->
-            <!--android:minHeight="@dimen/button_height_large"-->
-            <!--android:text="@string/start" />-->
-
     </RelativeLayout>
 
 </LinearLayout>

@@ -16,7 +16,7 @@
 
     <!-- transparent colors -->
     <color name="transparent_grey">#b4555555</color>
-
+    <color name="test">#80000000</color>
     <!-- gradient -->
     <color name="gradient_start">#00000000</color>
     <color name="gradient_end">#c0000000</color>

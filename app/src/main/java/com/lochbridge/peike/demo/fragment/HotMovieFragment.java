@@ -8,12 +8,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.lochbridge.peike.demo.R;
 import com.lochbridge.peike.demo.io.LruMovieCache;
 import com.lochbridge.peike.demo.model.Movie;
 import com.lochbridge.peike.demo.network.NetworkManager;
+import com.lochbridge.peike.demo.views.MovieListAdapter;
 
 import java.util.List;
 
@@ -26,6 +28,8 @@ public class HotMovieFragment extends BaseMovieListFragment {
     private TextView mEmptyText;
     private View mLoadingIndicator;
 
+    private MovieListAdapter mMovieListAdapter;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -34,7 +38,11 @@ public class HotMovieFragment extends BaseMovieListFragment {
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+        ListView listView = (ListView) view.findViewById(android.R.id.list);
+        mMovieListAdapter = new MovieListAdapter(getActivity());
+        listView.setAdapter(mMovieListAdapter);
+        super.onViewCreated(listView, savedInstanceState);
+
         mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swiperefresh);
         mEmptyText = (TextView) view.findViewById(R.id.empty_id);
         mLoadingIndicator = view.findViewById(R.id.progressContainer);

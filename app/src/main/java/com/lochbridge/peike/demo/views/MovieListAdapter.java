@@ -51,15 +51,15 @@ public class MovieListAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         if (mHotMovies != null && !mHotMovies.isEmpty()) {
-            ViewHolder holder = new ViewHolder();
+            ViewHolder holder;
             if (convertView == null) {
                 View v = this.mInflater.inflate(R.layout.list_item, parent, false);
-                v.setTag(holder);
-
+                holder = new ViewHolder();
                 holder.primaryText = (TextView) v.findViewById(R.id.primary_text);
                 holder.imdbRating = (TextView) v.findViewById(R.id.imdb_rating);
                 holder.doubanRating = (TextView) v.findViewById(R.id.douban_rating);
                 holder.imageView = (NetworkImageView) v.findViewById(R.id.item_avatar);
+                v.setTag(holder);
                 convertView = v;
             } else {
                 holder = (ViewHolder) convertView.getTag();

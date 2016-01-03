@@ -1,11 +1,7 @@
 package com.lochbridge.peike.demo.fragment;
 
-import android.content.Context;
-import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,7 +15,7 @@ import com.lochbridge.peike.demo.views.LocalMovieAdapter;
 
 import java.util.List;
 
-public class LocalMovieFragment extends Fragment {
+public class LocalMovieFragment extends BaseMovieListFragment {
     private static final String LOG_TAG = "LocalMovieFragment";
     private LocalMovieAdapter localMovieAdapter;
     private GridView localGridView;
@@ -32,10 +28,10 @@ public class LocalMovieFragment extends Fragment {
         return fragment;
     }
 
+
     @Override
     public void onResume() {
         super.onResume();
-        // TODO udpate view by checking local db;
         refreshLocalView();
     }
 
@@ -48,12 +44,11 @@ public class LocalMovieFragment extends Fragment {
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
         localGridView = (GridView) view.findViewById(R.id.local_gridview);
         emptyLocalTextView = (TextView) view.findViewById(R.id.empty_local_textview);
         localMovieAdapter = new LocalMovieAdapter(getActivity());
         localGridView.setAdapter(localMovieAdapter);
-//        refreshLocalView();
+        super.onViewCreated(localGridView,savedInstanceState);
     }
 
     private void refreshLocalView() {

@@ -59,8 +59,8 @@ public class LocalMovieAdapter extends BaseAdapter {
             ViewHolder holder = new ViewHolder();
             if (convertView == null) {
                 View view = layoutInflater.inflate(R.layout.grid_item, parent, false);
-                holder.posterImgView = (NetworkImageView) view.findViewById(R.id.grid_poster);
-                holder.titleView = (TextView) view.findViewById(R.id.gridview_title);
+                holder.posterImgView = (NetworkImageView) view.findViewById(R.id.item_avatar);
+                holder.titleView = (TextView) view.findViewById(R.id.primary_text);
                 holder.doubanRatingView = (TextView) view.findViewById(R.id.douban_rating);
                 holder.imdbRatingView = (TextView) view.findViewById(R.id.imdb_rating);
                 convertView = view;
@@ -69,18 +69,12 @@ public class LocalMovieAdapter extends BaseAdapter {
                 holder = (ViewHolder) convertView.getTag();
             }
             Movie movie = localMovies.get(position);
-            String title = movie.title;
-            String imdbId = movie.imdbId;
-            String posterUrl = movie.posterUrl;
-            String doubanRaing = movie.doubanRating;
-            String imdbRating = movie.imdbRating;
-
-            holder.titleView.setText(title);
-            holder.doubanRatingView.setText(doubanRaing);
-            holder.imdbRatingView.setText(imdbRating);
-            holder.imdbId = imdbId;
-            if (URLUtil.isValidUrl(posterUrl)) {
-                NetworkManager.setPoster(holder.posterImgView, posterUrl);
+            holder.titleView.setText(movie.title);
+            holder.doubanRatingView.setText(movie.doubanRating);
+            holder.imdbRatingView.setText(movie.imdbRating);
+            holder.titleView.setTag(movie.imdbId);
+            if (URLUtil.isValidUrl(movie.posterUrl)) {
+                NetworkManager.setPoster(holder.posterImgView, movie.posterUrl);
             }
         }
         return convertView;
@@ -91,6 +85,5 @@ public class LocalMovieAdapter extends BaseAdapter {
         TextView titleView;
         TextView doubanRatingView;
         TextView imdbRatingView;
-        String imdbId;
     }
 }

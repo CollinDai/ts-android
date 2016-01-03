@@ -12,7 +12,7 @@ import com.lochbridge.peike.demo.io.LruBitmapCache;
  * Created by PDai on 11/5/2015.
  */
 public class VolleySingleton {
-    private static final int CACHE_SIZE_BYTE = 2 * 1024 * 1024;
+    private static final int CACHE_SIZE_BYTE = 4 * 1024 * 1024;
     private static VolleySingleton mInstance;
     private static Context mCtx;
     private RequestQueue mRequestQueue;

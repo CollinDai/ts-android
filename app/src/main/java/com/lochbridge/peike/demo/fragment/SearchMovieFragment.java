@@ -7,12 +7,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.lochbridge.peike.demo.R;
 import com.lochbridge.peike.demo.model.Movie;
 import com.lochbridge.peike.demo.network.NetworkManager;
 import com.lochbridge.peike.demo.util.Constants;
+import com.lochbridge.peike.demo.views.MovieListAdapter;
 import com.parse.ParseObject;
 
 import java.util.List;
@@ -26,6 +28,7 @@ public class SearchMovieFragment extends BaseMovieListFragment {
     private static final String LOG_TAG = "SearchMovieFragment";
     private String mTitle;
     private TextView mResultMsg;
+    private MovieListAdapter mMovieListAdapter;
 
     public static SearchMovieFragment newInstance(String title) {
         SearchMovieFragment fragment = new SearchMovieFragment();
@@ -53,7 +56,10 @@ public class SearchMovieFragment extends BaseMovieListFragment {
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+        ListView listView = (ListView) view.findViewById(android.R.id.list);
+        mMovieListAdapter = new MovieListAdapter(getActivity());
+        listView.setAdapter(mMovieListAdapter);
+        super.onViewCreated(listView, savedInstanceState);
         mResultMsg = (TextView) view.findViewById(R.id.empty_id);
     }
 

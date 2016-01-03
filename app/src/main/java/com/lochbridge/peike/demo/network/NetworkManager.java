@@ -81,7 +81,6 @@ public class NetworkManager {
         String url = "http://www.omdbapi.com/?t=" +
                 buildQuery(movieName) + "&y=&plot=short&r=json";
 
-//        JsonArrayRequest request = new JsonArrayRequest(url, new Response.Listener<JSONArray>() {
         Log.d(LOGTAG, "Search: " + movieName);
         JsonObjectRequest request = new JsonObjectRequest(url, new Response.Listener<JSONObject>() {
             @Override
@@ -91,11 +90,8 @@ public class NetworkManager {
                 List<Movie> result = new ArrayList<>();
                 try {
                     if (!response.has("Error")) {
-//                    for (int i = 0; i < response.length(); ++i) {
-//                        movie.title = response.getJSONObject(i).getString("title");
                         Movie movie = new Movie();
                         movie.title = response.getString("Title");
-//                        movie.posterUrl = response.getJSONObject(i).getString("poster_url");
                         movie.imdbId = response.getString("imdbID");
                         movie.posterUrl = response.getString("Poster");
                         result.add(movie);
@@ -182,7 +178,6 @@ public class NetworkManager {
 
     private static void errorHandler(VolleyError error) {
         error.printStackTrace();
-        Log.e(LOGTAG, "Error code: " + error.networkResponse.statusCode);
     }
 
     private static String buildLangQuery(List<String> languages) {

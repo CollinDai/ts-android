@@ -9,6 +9,7 @@
     <style name="PrimaryText">
         <item name="android:textSize">@dimen/font_normal</item>
     </style>
+
     <style name="SecondaryText">
         <item name="android:textSize">@dimen/font_small</item>
         <item name="android:layout_width">match_parent</item>
@@ -19,6 +20,18 @@
     <style name="AvatarSize">
         <item name="android:layout_width">40dp</item>
         <item name="android:layout_height">60dp</item>
+    </style>
+
+    <style name="GenericProgressBackground" parent="android:Theme.Translucent">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="GenericProgressIndicator" parent="@android:style/Widget.ProgressBar">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:indeterminate">true</item>
     </style>
 
 </resources>
