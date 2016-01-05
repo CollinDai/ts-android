@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.widget.TextView;
 
 import com.android.volley.toolbox.NetworkImageView;
@@ -33,6 +34,8 @@ public class DetailActivity extends AppCompatActivity implements LanguageDialogF
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        boolean result = requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+        Log.d(LOG_TAG, "Progress bar is enabled " + result);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
 

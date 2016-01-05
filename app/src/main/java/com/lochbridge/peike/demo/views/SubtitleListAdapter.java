@@ -14,7 +14,7 @@ import com.lochbridge.peike.demo.R;
 import com.lochbridge.peike.demo.manager.SubtitleFileManager;
 import com.lochbridge.peike.demo.model.Subtitle;
 import com.lochbridge.peike.demo.network.NetworkManager;
-import com.lochbridge.peike.demo.util.ProgressBarUtil;
+import com.lochbridge.peike.demo.util.ProgressDialogUtil;
 import com.lochbridge.peike.demo.util.ResourceUtil;
 import com.lochbridge.peike.demo.util.StorageUtil;
 
@@ -100,7 +100,7 @@ public class SubtitleListAdapter extends BaseAdapter {
             int index = (Integer) v.getTag();
             final Subtitle subtitle = mSubtitles.get(index);
             final int subId = subtitle.fileId;
-            ProgressBarUtil.showLoadingCircle((Activity) mContext);
+            ProgressDialogUtil.show((Activity) mContext);
             SubtitleFileManager.downloadSubtitle(mContext, subId, new NetworkManager.Callback<String>() {
                 @Override
                 public void onResponse(String s) {
@@ -110,7 +110,7 @@ public class SubtitleListAdapter extends BaseAdapter {
                         DetailActivity activity = (DetailActivity) mContext;
                         activity.persistMovieToDB();
                     }
-                    ProgressBarUtil.hideLoadingCircle((Activity) mContext);
+                    ProgressDialogUtil.hide();
                     v.setVisibility(View.INVISIBLE);
                 }
             });

@@ -20,9 +20,6 @@ import com.lochbridge.peike.demo.util.Constants;
 import java.lang.ref.WeakReference;
 import java.util.List;
 
-/**
- * Created by Peike on 12/7/2015.
- */
 public class SimplePlayerFragment extends PlayerFragment {
     private static final String LOG_TAG = "SimplePlayerFragment";
     private TextView subTextView;
@@ -57,24 +54,7 @@ public class SimplePlayerFragment extends PlayerFragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         startPlaying();
-        changeText(String.valueOf(mSubId));
-    }
-
-    private void startPlaying() {
-//        mHandler.postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                changeText("Bonjour");
-//            }
-//        }, 5000);
-        thread = new ReadFileThread(getActivity(), this.mSubId);
-        thread.start();
-    }
-
-    private void changeText(String newText) {
-        String escapedTest = TextUtils.htmlEncode(newText);
-        CharSequence styledText = Html.fromHtml(escapedTest);
-        subTextView.setText(styledText);
+        subTextView.setText(R.string.processing);
     }
 
     @Override
@@ -90,6 +70,17 @@ public class SimplePlayerFragment extends PlayerFragment {
             e.printStackTrace();
         }
     }
+
+    private void startPlaying() {
+        thread = new ReadFileThread(getActivity(), this.mSubId);
+        thread.start();
+    }
+    private void changeText(String newText) {
+        String escapedTest = TextUtils.htmlEncode(newText);
+        CharSequence styledText = Html.fromHtml(escapedTest);
+        subTextView.setText(styledText);
+    }
+
 
     static class SubMsgHandler extends Handler {
         private final WeakReference<SimplePlayerFragment> mFragment;
@@ -125,11 +116,16 @@ public class SimplePlayerFragment extends PlayerFragment {
         public void run() {
             List<SRTItem> subDataObjList = SubtitleFileManager.getSRTItem(mContext, subFileId);
             Log.d(LOG_TAG, "SRT Item number: " + subDataObjList.size());
+            sendMessage("Processing done! Start Playing.", 0);
             for (final SRTItem srtItem : subDataObjList) {
                 if (stopFlag) break;
-                Message msg = subMsgHandler.obtainMessage(Constants.MSG_SRT_TEXT, srtItem.text);
-                subMsgHandler.sendMessageDelayed(msg, srtItem.startTimeMilli);
+                sendMessage(srtItem.text, srtItem.startTimeMilli);
             }
+        }
+
+        private void sendMessage(String msgValue, int delayedMilli) {
+            Message msg = subMsgHandler.obtainMessage(Constants.MSG_SRT_TEXT, msgValue);
+            subMsgHandler.sendMessageDelayed(msg, delayedMilli);
         }
     }
 

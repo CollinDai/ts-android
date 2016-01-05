@@ -25,7 +25,7 @@ import com.lochbridge.peike.demo.manager.SubtitleFileManager;
 import com.lochbridge.peike.demo.model.Subtitle;
 import com.lochbridge.peike.demo.network.NetworkManager;
 import com.lochbridge.peike.demo.util.Constants;
-import com.lochbridge.peike.demo.util.ProgressBarUtil;
+import com.lochbridge.peike.demo.util.ProgressDialogUtil;
 import com.lochbridge.peike.demo.util.StorageUtil;
 
 import java.util.ArrayList;
@@ -121,7 +121,7 @@ public class SubtitleDialogFragment extends DialogFragment {
     }
 
     private String convertByteToKB(int b) {
-        double byteValue = (double)b;
+        double byteValue = (double) b;
         return String.format("%.2f", byteValue / 1024D) + " KB";
     }
 
@@ -152,7 +152,7 @@ public class SubtitleDialogFragment extends DialogFragment {
             }
             Toast.makeText(getActivity(), "Delete " + (result ? "succeed!" : "failed!"), Toast.LENGTH_SHORT).show();
         } else {
-            ProgressBarUtil.showLoadingCircle(getActivity());
+            ProgressDialogUtil.show(getActivity());
             SubtitleFileManager.downloadSubtitle(getActivity(), subId, new NetworkManager.Callback<String>() {
                 @Override
                 public void onResponse(String s) {
@@ -163,7 +163,7 @@ public class SubtitleDialogFragment extends DialogFragment {
                     StorageUtil.writeSubtitleToDB(getActivity(), mSubtitle);
                     mListener.persistMovieToDB();
                     toggleSubDialogButtons(true);
-                    ProgressBarUtil.hideLoadingCircle(getActivity());
+                    ProgressDialogUtil.hide();
                 }
             });
         }

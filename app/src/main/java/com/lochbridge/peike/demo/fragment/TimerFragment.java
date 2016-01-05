@@ -18,24 +18,10 @@ import java.util.TimerTask;
  */
 public class TimerFragment extends Fragment {
     TextView minAndSecView;
-    int second;
     long startTime;
 
     Handler timerHandler = new Handler();
-    Runnable timerRunnable = new Runnable() {
-
-        @Override
-        public void run() {
-            long millis = System.currentTimeMillis() - startTime;
-            int seconds = (int) (millis / 1000);
-            int minutes = seconds / 60;
-            seconds = seconds % 60;
-
-            minAndSecView.setText(String.format("%d:%02d", minutes, seconds));
-
-            timerHandler.postDelayed(this, 500);
-        }
-    };
+    Runnable timerRunnable = new TimerRunnable();
 
     @Nullable
     @Override
@@ -55,6 +41,24 @@ public class TimerFragment extends Fragment {
     public void onPause() {
         super.onPause();
         timerHandler.removeCallbacks(timerRunnable);
+    }
+
+    class TimerRunnable implements Runnable {
+
+        @Override
+        public void run() {
+            long millis = getPlayerCurrentTime() - startTime;
+            int seconds = (int) (millis / 1000);
+            int minutes = seconds / 60;
+            seconds = seconds % 60;
+
+            minAndSecView.setText(String.format("%d:%02d", minutes, seconds));
+            timerHandler.postDelayed(this, 500);
+        }
+
+        long getPlayerCurrentTime() {
+            return System.currentTimeMillis();
+        }
     }
 }
 
