@@ -69,6 +69,7 @@ public class MovieListAdapter extends BaseAdapter {
             holder.imdbRating.setText(m.imdbRating);
             holder.doubanRating.setText(m.doubanRating);
             holder.primaryText.setTag(m.imdbId);
+            holder.imageView.setTag(m.backdropUrl);
             if (URLUtil.isValidUrl(m.posterUrl)) {
                 NetworkManager.setPoster(holder.imageView, m.posterUrl);
             }
@@ -81,5 +82,6 @@ public class MovieListAdapter extends BaseAdapter {
         TextView primaryText;
         TextView imdbRating;
         TextView doubanRating;
+
     }
 }

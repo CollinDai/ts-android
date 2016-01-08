@@ -1,11 +1,4 @@
 <resources>
-
-    <!-- Base application theme. -->
-    <style name="AppTheme" parent="Base.Theme.AppCompat.Light">
-        <!-- Customize your theme here. -->
-    </style>
-
-
     <style name="PrimaryText">
         <item name="android:textSize">@dimen/font_normal</item>
     </style>

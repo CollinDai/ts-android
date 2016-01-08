@@ -26,4 +26,11 @@
     <color name="material_blue_500">#2196F3</color>
     <color name="material_blue_700">#1976D2</color>
     <color name="material_green_A200">#A5D6A7</color>
+
+    <color name="indigo_primary_500">#3F51B5</color>
+    <color name="indigo_primary_dark_700">#303F9F</color>
+    <color name="pink_accent_a200">#FF4081</color>
+
+    <!-- translucency colors -->
+    <color name="translucency_actionbar">#80000000</color>
 </resources>

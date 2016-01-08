@@ -13,9 +13,6 @@ import com.lochbridge.peike.demo.R;
 
 import java.util.TimerTask;
 
-/**
- * Created by Peike on 12/13/2015.
- */
 public class TimerFragment extends Fragment {
     TextView minAndSecView;
     long startTime;

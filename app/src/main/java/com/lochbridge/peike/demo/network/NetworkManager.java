@@ -23,9 +23,6 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by PDai on 11/5/2015.
- */
 public class NetworkManager {
     private static final String LOGTAG = "NetworkManager";
     private static final String HOSTNAME = "http://aqueous-falls-1653.herokuapp.com/";
@@ -48,6 +45,7 @@ public class NetworkManager {
                         movie.title = movieResp.getString("title");
                         movie.imdbId = movieResp.getString("imdb_id");
                         movie.posterUrl = movieResp.getString("poster_url");
+                        movie.backdropUrl = movieResp.getString("backdrop_url");
                         movie.doubanRating = movieResp.getString("douban_rating");
                         movie.imdbRating = movieResp.getString("imdb_rating");
                         result.add(movie);
@@ -170,7 +168,9 @@ public class NetworkManager {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                       errorHandler(error);
+                        errorHandler(error);
+                        Toast.makeText(context, "Download Fail!", Toast.LENGTH_SHORT).show();
+                        callback.onResponse(null);
                     }
                 });
         VolleySingleton.getInstance(context).addToRequestQueue(stringRequest);

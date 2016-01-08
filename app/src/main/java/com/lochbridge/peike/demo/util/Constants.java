@@ -13,6 +13,8 @@ public class Constants {
     public static final String EXTRA_SUB_ID = "EXTRA_SUB_ID";
     public static final String EXTRA_IMDB_RATING = "EXTRA_IMDB_RATING";
     public static final String EXTRA_DOUBAN_RATING = "EXTRA_DOUBAN_RATING";
+    public static final String EXTRA_MOVIE = "EXTRA_MOVIE";
+
 
     public static final String PREFIX_RES_FLAG = "ic_flag_";
     public static final String ARG_SUBTITLE = "ARG_SUBTITLE";

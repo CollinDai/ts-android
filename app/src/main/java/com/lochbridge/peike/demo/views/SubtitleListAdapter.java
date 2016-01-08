@@ -104,14 +104,16 @@ public class SubtitleListAdapter extends BaseAdapter {
             SubtitleFileManager.downloadSubtitle(mContext, subId, new NetworkManager.Callback<String>() {
                 @Override
                 public void onResponse(String s) {
-                    SubtitleFileManager.putSubtitle(mContext, subId, s);
-                    StorageUtil.writeSubtitleToDB(mContext, subtitle);
-                    if (mContext instanceof DetailActivity) {
-                        DetailActivity activity = (DetailActivity) mContext;
-                        activity.persistMovieToDB();
+                    if (s != null && !s.isEmpty()) {
+                        SubtitleFileManager.putSubtitle(mContext, subId, s);
+                        StorageUtil.writeSubtitleToDB(mContext, subtitle);
+                        if (mContext instanceof DetailActivity) {
+                            DetailActivity activity = (DetailActivity) mContext;
+                            activity.persistMovieToDB();
+                        }
+                        v.setVisibility(View.INVISIBLE);
                     }
                     ProgressDialogUtil.hide();
-                    v.setVisibility(View.INVISIBLE);
                 }
             });
         }

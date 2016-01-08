@@ -73,6 +73,7 @@ public class LocalMovieAdapter extends BaseAdapter {
             holder.doubanRatingView.setText(movie.doubanRating);
             holder.imdbRatingView.setText(movie.imdbRating);
             holder.titleView.setTag(movie.imdbId);
+            holder.posterImgView.setTag(movie.backdropUrl);
             if (URLUtil.isValidUrl(movie.posterUrl)) {
                 NetworkManager.setPoster(holder.posterImgView, movie.posterUrl);
             }

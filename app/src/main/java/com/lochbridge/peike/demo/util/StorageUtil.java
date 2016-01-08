@@ -112,6 +112,7 @@ public class StorageUtil {
                 m.imdbRating = cursor.getString(cursor.getColumnIndexOrThrow(MovieSubtitleContract.Movies.IMDB_RATING));
                 m.doubanRating = cursor.getString(cursor.getColumnIndexOrThrow(MovieSubtitleContract.Movies.DOUBAN_RATING));
                 m.posterUrl = cursor.getString(cursor.getColumnIndexOrThrow(MovieSubtitleContract.Movies.POSTER_URL));
+                m.backdropUrl = cursor.getString(cursor.getColumnIndexOrThrow(MovieSubtitleContract.Movies.BACKDROP_URL));
                 result.add(m);
                 cursor.moveToNext();
             }
@@ -168,6 +169,7 @@ public class StorageUtil {
         values.put(MovieSubtitleContract.Movies.IMDB_ID, movie.imdbId);
         values.put(MovieSubtitleContract.Movies.TITLE, movie.title);
         values.put(MovieSubtitleContract.Movies.POSTER_URL, movie.posterUrl);
+        values.put(MovieSubtitleContract.Movies.BACKDROP_URL, movie.backdropUrl);
         values.put(MovieSubtitleContract.Movies.DOUBAN_RATING, movie.doubanRating);
         values.put(MovieSubtitleContract.Movies.IMDB_RATING, movie.imdbRating);
         long rowId = db.insertOrThrow(MovieSubtitleDatabase.MOVIES, null, values);

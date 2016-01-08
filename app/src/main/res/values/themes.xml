@@ -1,15 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- extend one of the Theme.AppCompat themes -->
     <style name="Theme.MyTheme" parent="Theme.AppCompat.Light">
-        <!-- customize the color palette -->
         <item name="android:windowContentOverlay">@null</item>
-        <item name="colorPrimary">@color/material_blue_500</item>
-        <item name="colorPrimaryDark">@color/material_blue_700</item>
-        <item name="colorAccent">@color/material_green_A200</item>
+        <item name="colorPrimary">@color/indigo_primary_500</item>
+        <item name="colorPrimaryDark">@color/indigo_primary_dark_700</item>
+        <item name="colorAccent">@color/pink_accent_a200</item>
     </style>
 
     <style name="Theme.PlayerTheme" parent="Theme.AppCompat.NoActionBar">
         <item name="android:windowFullscreen">true</item>
     </style>
+
+    <style name="Theme.DetailTheme" parent="Theme.MyTheme">
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:actionBarStyle">@style/MyActionBar</item>
+        <item name="android:windowActionBarOverlay">true</item>
+        <!-- Support library compatibility -->
+        <item name="actionBarStyle">@style/MyActionBar</item>
+        <item name="windowActionBarOverlay">true</item>
+    </style>
+
+    <style name="MyActionBar" parent="@style/Widget.AppCompat.ActionBar.Solid">
+        <item name="android:background">@color/translucency_actionbar</item>
+        <item name="android:titleTextStyle">@style/MyActionBar.TitleStyle</item>
+        <!-- Support library compatibility -->
+        <item name="background">@color/translucency_actionbar</item>
+        <item name="titleTextStyle">@style/MyActionBar.TitleStyle</item>
+    </style>
+    <style name="MyActionBar.TitleStyle" parent="@style/Widget.AppCompat.ActionBar.Solid">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">@dimen/font_large</item>
+    </style>
+
 </resources>

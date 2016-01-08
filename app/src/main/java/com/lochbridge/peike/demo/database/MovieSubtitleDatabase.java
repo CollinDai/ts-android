@@ -34,6 +34,7 @@ public class MovieSubtitleDatabase extends SQLiteOpenHelper {
                 + MovieSubtitleContract.Movies.IMDB_ID + " TEXT NOT NULL,"
                 + MovieSubtitleContract.Movies.TITLE + " TEXT NOT NULL,"
                 + MovieSubtitleContract.Movies.POSTER_URL + " TEXT NOT NULL,"
+                + MovieSubtitleContract.Movies.BACKDROP_URL + " TEXT NOT NULL,"
                 + MovieSubtitleContract.Movies.DOUBAN_RATING + " TEXT NOT NULL,"
                 + MovieSubtitleContract.Movies.IMDB_RATING + " TEXT NOT NULL)");
         db.execSQL("CREATE TABLE " + SUBTITLES + " ("

@@ -2,9 +2,14 @@ package com.lochbridge.peike.demo;
 
 import android.app.FragmentTransaction;
 import android.content.Intent;
+import android.content.res.TypedArray;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.support.v4.app.NavUtils;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -34,28 +39,22 @@ public class DetailActivity extends AppCompatActivity implements LanguageDialogF
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        boolean result = requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
-        Log.d(LOG_TAG, "Progress bar is enabled " + result);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
-
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
 
         Intent intent = getIntent();
-        mMovie = new Movie();
-        mMovie.title = intent.getStringExtra(Constants.EXTRA_TITLE);
-        // TODO get a better poster here
-        // TODO use Movie model here
-        mMovie.posterUrl = intent.getStringExtra(Constants.EXTRA_POSTER_URL);
-        mMovie.imdbId = intent.getStringExtra(Constants.EXTRA_IMDB_ID);
-        mMovie.imdbRating = intent.getStringExtra(Constants.EXTRA_IMDB_RATING);
-        mMovie.doubanRating = intent.getStringExtra(Constants.EXTRA_DOUBAN_RATING);
+        mMovie = intent.getParcelableExtra(Constants.EXTRA_MOVIE);
         setupSubListFragment();
 
         TextView titleView = (TextView) findViewById(R.id.movie_title);
         NetworkImageView posterView = (NetworkImageView) findViewById(R.id.poster);
 
         titleView.setText(mMovie.title);
-        NetworkManager.setPoster(posterView, mMovie.posterUrl);
+        NetworkManager.setPoster(posterView, mMovie.backdropUrl);
     }
 
     private void setupSubListFragment() {
@@ -63,6 +62,17 @@ public class DetailActivity extends AppCompatActivity implements LanguageDialogF
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
         transaction.replace(R.id.frag_sub_list, subListFragment);
         transaction.commit();
+    }
+
+    private int obtainPrimaryColor() {
+        TypedValue typedValue = new TypedValue();
+
+        TypedArray a = obtainStyledAttributes(typedValue.data, new int[]{R.attr.colorPrimary });
+        int color = a.getColor(0, 0);
+
+        a.recycle();
+
+        return color;
     }
 
     @Override
@@ -79,9 +89,10 @@ public class DetailActivity extends AppCompatActivity implements LanguageDialogF
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        switch (id) {
+            case android.R.id.home:
+                finish();
+                return true;
         }
 
         return super.onOptionsItemSelected(item);
