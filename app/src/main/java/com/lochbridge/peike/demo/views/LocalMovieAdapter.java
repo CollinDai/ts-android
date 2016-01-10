@@ -28,8 +28,9 @@ public class LocalMovieAdapter extends BaseAdapter {
     private static final String LOG_TAG = "LocalMovieAdapter";
     private List<Movie> localMovies;
     private LayoutInflater layoutInflater;
-
+    private Context context;
     public LocalMovieAdapter(Context context) {
+        this.context = context;
         this.layoutInflater = LayoutInflater.from(context);
     }
 
@@ -75,7 +76,7 @@ public class LocalMovieAdapter extends BaseAdapter {
             holder.titleView.setTag(movie.imdbId);
             holder.posterImgView.setTag(movie.backdropUrl);
             if (URLUtil.isValidUrl(movie.posterUrl)) {
-                NetworkManager.setPoster(holder.posterImgView, movie.posterUrl);
+                NetworkManager.setPoster(context, holder.posterImgView, movie.posterUrl);
             }
         }
         return convertView;

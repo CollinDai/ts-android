@@ -54,7 +54,7 @@ public class DetailActivity extends AppCompatActivity implements LanguageDialogF
         NetworkImageView posterView = (NetworkImageView) findViewById(R.id.poster);
 
         titleView.setText(mMovie.title);
-        NetworkManager.setPoster(posterView, mMovie.backdropUrl);
+        NetworkManager.setPoster(this, posterView, mMovie.backdropUrl);
     }
 
     private void setupSubListFragment() {
@@ -62,17 +62,6 @@ public class DetailActivity extends AppCompatActivity implements LanguageDialogF
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
         transaction.replace(R.id.frag_sub_list, subListFragment);
         transaction.commit();
-    }
-
-    private int obtainPrimaryColor() {
-        TypedValue typedValue = new TypedValue();
-
-        TypedArray a = obtainStyledAttributes(typedValue.data, new int[]{R.attr.colorPrimary });
-        int color = a.getColor(0, 0);
-
-        a.recycle();
-
-        return color;
     }
 
     @Override

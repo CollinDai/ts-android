@@ -23,8 +23,9 @@ public class MovieListAdapter extends BaseAdapter {
     private static final String LOG_TAG = "MovieListAdapter";
     private LayoutInflater mInflater;
     private List<Movie> mHotMovies;
-
+    private Context context;
     public MovieListAdapter(Context context) {
+        this.context = context;
         mInflater = LayoutInflater.from(context);
     }
 
@@ -71,7 +72,7 @@ public class MovieListAdapter extends BaseAdapter {
             holder.primaryText.setTag(m.imdbId);
             holder.imageView.setTag(m.backdropUrl);
             if (URLUtil.isValidUrl(m.posterUrl)) {
-                NetworkManager.setPoster(holder.imageView, m.posterUrl);
+                NetworkManager.setPoster(context, holder.imageView, m.posterUrl);
             }
         }
         return convertView;

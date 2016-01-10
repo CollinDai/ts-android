@@ -69,9 +69,9 @@ public class NetworkManager {
     }
 
 
-    public static void setPoster(NetworkImageView imageView, String imgUrl) {
+    public static void setPoster(Context context,NetworkImageView imageView, String imgUrl) {
         Log.d(LOGTAG, "Get thumbnail from: " + imgUrl);
-        ImageLoader imageLoader = VolleySingleton.getInstance(null).getImageLoader();
+        ImageLoader imageLoader = VolleySingleton.getInstance(context).getImageLoader();
         imageView.setImageUrl(imgUrl, imageLoader);
     }
 

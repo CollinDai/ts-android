@@ -56,11 +56,6 @@ public class HotMovieFragment extends BaseMovieListFragment {
         getTopTen(false);
     }
 
-    @Override
-    public void onAttach(Context context) {
-        Log.d(LOG_TAG, "onAttach()");
-        super.onAttach(context);
-    }
 
     public void getTopTen(boolean pulled) {
         if (!pulled) {

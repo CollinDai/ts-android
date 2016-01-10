@@ -72,12 +72,12 @@ public class SimplePlayerFragment extends PlayerFragment {
     }
 
     private void startPlaying() {
-        thread = new ReadFileThread(getActivity(), this.mSubId);
+        thread = new ReadFileThread(this.mSubId);
         thread.start();
     }
+
     private void changeText(String newText) {
-        String escapedTest = TextUtils.htmlEncode(newText);
-        CharSequence styledText = Html.fromHtml(escapedTest);
+        CharSequence styledText = Html.fromHtml(newText);
         subTextView.setText(styledText);
     }
 
@@ -104,29 +104,52 @@ public class SimplePlayerFragment extends PlayerFragment {
         // then use handler to initiate
         // task to send data to main thread
         int subFileId;
-        Context mContext;
+        int currentNode = 0;
         boolean stopFlag = false;
+        boolean isWokeUp = false;
+        List<SRTItem> subDataObjList;
 
-        ReadFileThread(Context context, int subId) {
+        ReadFileThread(int subId) {
             subFileId = subId;
-            mContext = context;
         }
 
         @Override
         public void run() {
-            List<SRTItem> subDataObjList = SubtitleFileManager.getSRTItem(mContext, subFileId);
+            subDataObjList = SubtitleFileManager.getSRTItem(getContext(), subFileId);
             Log.d(LOG_TAG, "SRT Item number: " + subDataObjList.size());
-            sendMessage("Processing done! Start Playing.", 0);
-            for (final SRTItem srtItem : subDataObjList) {
+            sendMessage("", 0);
+
+            int currentTime = 0;
+            for (; currentNode < subDataObjList.size(); ++currentNode) {
                 if (stopFlag) break;
-                sendMessage(srtItem.text, srtItem.startTimeMilli);
+                SRTItem srtItem = subDataObjList.get(currentNode);
+                try {
+                    sendMessage(srtItem.text, 0);
+                    currentTime = srtItem.startTimeMilli;
+                    sleep(srtItem.startTimeMilli - currentTime);
+                } catch (InterruptedException e) {
+                    if (!isWokeUp) {
+                        e.printStackTrace();
+                        break;
+                    }
+                }
             }
+        }
+
+        public void nextLine() {
+            currentNode++;
+            isWokeUp = true;
+        }
+        public void previousLine() {
+            currentNode = currentNode == 0 ? 0 : currentNode+1;
+            isWokeUp = true;
         }
 
         private void sendMessage(String msgValue, int delayedMilli) {
             Message msg = subMsgHandler.obtainMessage(Constants.MSG_SRT_TEXT, msgValue);
             subMsgHandler.sendMessageDelayed(msg, delayedMilli);
         }
+
     }
 
 }

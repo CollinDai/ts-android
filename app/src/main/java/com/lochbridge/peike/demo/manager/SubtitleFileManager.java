@@ -51,7 +51,6 @@ public class SubtitleFileManager {
             SRTItem srtItem = null;
             int counter = 0;
             while ((line = br.readLine()) != null) {
-                Log.d(LOG_TAG, line);
                 if (isItemNumber(line, prevLine)) {
                     if (srtItem != null) {
                         result.add(srtItem);
@@ -64,8 +63,8 @@ public class SubtitleFileManager {
                     String endTimecode = line.substring(splitterIdx + 3).trim();
                     srtItem.startTimeMilli = DateTimeUtil.timecodeToMillisecond(startTimecode);
                     srtItem.endTimeMilli = DateTimeUtil.timecodeToMillisecond(endTimecode);
-                } else if (!line.isEmpty() && srtItem != null) {
-                    srtItem.text = srtItem.text == null ? line : srtItem.text + line;
+                } else if (srtItem != null) {
+                    srtItem.text = srtItem.text == null ? line : srtItem.text + '\n' + line;
                 }
                 prevLine = line;
             }
