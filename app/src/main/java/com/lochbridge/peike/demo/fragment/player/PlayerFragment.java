@@ -43,4 +43,7 @@ public abstract class PlayerFragment extends Fragment {
         }
     }
 
+    public abstract void nextTapped();
+    public abstract void previousTapped();
+
 }

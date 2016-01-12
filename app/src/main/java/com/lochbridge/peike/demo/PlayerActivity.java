@@ -13,6 +13,7 @@ import com.lochbridge.peike.demo.util.Constants;
 
 public class PlayerActivity extends AppCompatActivity implements PlayerControlFragment.PlayerControlListener {
 
+    private PlayerFragment playerFragment;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -20,7 +21,6 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlFr
 
         int subId = getIntent().getIntExtra(Constants.EXTRA_SUB_ID, 0);
         int playerTheme = getIntent().getIntExtra(Constants.EXTRA_PLAYER_THEME, -1);
-        PlayerFragment playerFragment = null;
         switch (playerTheme) {
             case PlayerFragment.SIMPLE_THEME:
             default:
@@ -40,10 +40,11 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlFr
     public void nextTapped() {
         // show timer
         // Timer adjust to next srtItem.startTime
-        //
+        playerFragment.nextTapped();
     }
 
     @Override
     public void previousTapped() {
+        playerFragment.previousTapped();
     }
 }

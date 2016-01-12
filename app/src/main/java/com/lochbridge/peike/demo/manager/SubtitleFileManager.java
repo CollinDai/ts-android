@@ -49,13 +49,16 @@ public class SubtitleFileManager {
             String line;
             String prevLine = "";
             SRTItem srtItem = null;
-            int counter = 0;
             while ((line = br.readLine()) != null) {
                 if (isItemNumber(line, prevLine)) {
                     if (srtItem != null) {
+                        srtItem.next = new SRTItem();
+                        srtItem.next.previous = srtItem;
                         result.add(srtItem);
+                        srtItem = srtItem.next;
+                    } else {
+                        srtItem = new SRTItem();
                     }
-                    srtItem = new SRTItem();
                     srtItem.number = Integer.valueOf(line);
                 } else if (isTimeCode(line) && srtItem != null) {
                     int splitterIdx = line.indexOf("-->");

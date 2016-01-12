@@ -1,11 +1,10 @@
 package com.lochbridge.peike.demo.fragment.player;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.os.SystemClock;
 import android.text.Html;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -81,6 +80,16 @@ public class SimplePlayerFragment extends PlayerFragment {
         subTextView.setText(styledText);
     }
 
+    @Override
+    public void nextTapped() {
+        thread.next();
+    }
+
+    @Override
+    public void previousTapped() {
+        thread.previous();
+    }
+
 
     static class SubMsgHandler extends Handler {
         private final WeakReference<SimplePlayerFragment> mFragment;
@@ -104,9 +113,9 @@ public class SimplePlayerFragment extends PlayerFragment {
         // then use handler to initiate
         // task to send data to main thread
         int subFileId;
-        int currentNode = 0;
+        SRTItem currentNode;
         boolean stopFlag = false;
-        boolean isWokeUp = false;
+        boolean gotKickOff = false;
         List<SRTItem> subDataObjList;
 
         ReadFileThread(int subId) {
@@ -115,39 +124,60 @@ public class SimplePlayerFragment extends PlayerFragment {
 
         @Override
         public void run() {
-            subDataObjList = SubtitleFileManager.getSRTItem(getContext(), subFileId);
+            subDataObjList = SubtitleFileManager.getSRTItem(getActivity(), subFileId);
             Log.d(LOG_TAG, "SRT Item number: " + subDataObjList.size());
-            sendMessage("", 0);
-
-            int currentTime = 0;
-            for (; currentNode < subDataObjList.size(); ++currentNode) {
-                if (stopFlag) break;
-                SRTItem srtItem = subDataObjList.get(currentNode);
-                try {
-                    sendMessage(srtItem.text, 0);
-                    currentTime = srtItem.startTimeMilli;
-                    sleep(srtItem.startTimeMilli - currentTime);
-                } catch (InterruptedException e) {
-                    if (!isWokeUp) {
-                        e.printStackTrace();
-                        break;
-                    }
-                }
+            if (subDataObjList == null || subDataObjList.isEmpty()) {
+                sendMessage("Subtitle file is not valid.", false);
+                return;
+            }
+            sendMessage("", false);
+            currentNode = subDataObjList.get(0);
+            try {
+                iteration:
+                do {
+                    int sleepTime = getSleepTime();
+                    long startTime = SystemClock.uptimeMillis(), endTime;
+                    gotKickOff = false;
+                    do {
+                        if (stopFlag) break iteration;
+                        Thread.sleep(10);
+                        endTime = SystemClock.uptimeMillis();
+                    } while (endTime - startTime < sleepTime && !gotKickOff);
+                    sendMessage(currentNode.text, true);
+                } while (currentNode != null && !stopFlag);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
         }
 
-        public void nextLine() {
-            currentNode++;
-            isWokeUp = true;
-        }
-        public void previousLine() {
-            currentNode = currentNode == 0 ? 0 : currentNode+1;
-            isWokeUp = true;
+        public synchronized void next() {
+            gotKickOff = true;
         }
 
-        private void sendMessage(String msgValue, int delayedMilli) {
+        public synchronized void previous() {
+            // currentNode.previous == null: first node still has not shown
+            if (currentNode.previous != null) {
+                currentNode = currentNode.previous;
+                // currentNode.previous == null: first node is on the screen
+                if (currentNode.previous != null) {
+                    currentNode = currentNode.previous;
+                }
+                gotKickOff = true; // kick off only after first node has shown
+            }
+        }
+
+        private int getSleepTime() {
+            int startTime = currentNode.previous == null ? 0 : currentNode.previous.startTimeMilli;
+            int endTime = currentNode.startTimeMilli;
+            return endTime - startTime;
+        }
+
+        private synchronized void sendMessage(String msgValue, boolean shouldMoveForward) {
             Message msg = subMsgHandler.obtainMessage(Constants.MSG_SRT_TEXT, msgValue);
-            subMsgHandler.sendMessageDelayed(msg, delayedMilli);
+            subMsgHandler.sendMessageAtTime(msg, SystemClock.uptimeMillis());
+            if (shouldMoveForward) {
+                currentNode = currentNode.next;
+            }
         }
 
     }
