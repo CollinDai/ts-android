@@ -10,7 +10,6 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.JsonArrayRequest;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.NetworkImageView;
 import com.android.volley.toolbox.StringRequest;
 import com.lochbridge.peike.demo.model.Movie;
@@ -27,6 +26,7 @@ public class NetworkManager {
     private static final String LOGTAG = "NetworkManager";
     private static final String HOSTNAME = "http://aqueous-falls-1653.herokuapp.com/";
     private static final String TOPTEN_URL = HOSTNAME + "movie/";
+    private static final String SEARCH_URL = HOSTNAME + "movie/search";
     private static final String SUBTITLE_URL = HOSTNAME + "subtitle/";
     private static final String SUBTITLE_DOWNLOAD_URL = SUBTITLE_URL + "download/";
     private static final int SOCKET_TIMEOUT_MS = 9999;
@@ -69,29 +69,31 @@ public class NetworkManager {
     }
 
 
-    public static void setPoster(Context context,NetworkImageView imageView, String imgUrl) {
+    public static void setPoster(Context context, NetworkImageView imageView, String imgUrl) {
         Log.d(LOGTAG, "Get thumbnail from: " + imgUrl);
         ImageLoader imageLoader = VolleySingleton.getInstance(context).getImageLoader();
         imageView.setImageUrl(imgUrl, imageLoader);
     }
 
     public static void search(Context context, String movieName, final Callback<List<Movie>> callback) {
-        String url = "http://www.omdbapi.com/?t=" +
-                buildQuery(movieName) + "&y=&plot=short&r=json";
+        String url = SEARCH_URL + "?query=" + buildQuery(movieName);
 
         Log.d(LOGTAG, "Search: " + movieName);
-        JsonObjectRequest request = new JsonObjectRequest(url, new Response.Listener<JSONObject>() {
+        JsonArrayRequest request = new JsonArrayRequest(url, new Response.Listener<JSONArray>() {
             @Override
-//            public void onResponse(JSONArray response) {
-            public void onResponse(JSONObject response) {
+            public void onResponse(JSONArray response) {
                 Log.d(LOGTAG, "Raw reseponse: " + response.toString());
                 List<Movie> result = new ArrayList<>();
                 try {
-                    if (!response.has("Error")) {
+                    for (int i = 0; i < response.length(); ++i) {
                         Movie movie = new Movie();
-                        movie.title = response.getString("Title");
-                        movie.imdbId = response.getString("imdbID");
-                        movie.posterUrl = response.getString("Poster");
+                        JSONObject jsonObject = response.getJSONObject(i);
+                        movie.title = jsonObject.getString("title");
+                        movie.imdbId = jsonObject.getString("imdb_id");
+                        movie.posterUrl = jsonObject.getString("poster_url");
+                        movie.backdropUrl = jsonObject.getString("backdrop_url");
+                        movie.imdbRating = jsonObject.getString("imdb_rating");
+                        movie.doubanRating = jsonObject.getString("douban_rating");
                         result.add(movie);
                     }
                 } catch (JSONException e) {

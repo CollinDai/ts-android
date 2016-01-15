@@ -102,7 +102,7 @@ public class DetailActivity extends AppCompatActivity implements LanguageDialogF
         NetworkManager.searchSubtitle(this, this.mMovie.imdbId, languages, new NetworkManager.Callback<List<Subtitle>>() {
             @Override
             public void onResponse(List<Subtitle> subtitles) {
-                if (subtitles != null) {
+                if (subtitles != null && !subtitles.isEmpty()) {
                     Log.d(LOG_TAG, "Subtitle size: " + subtitles.size());
                     subListFragment.updateList(subtitles);
                     LruMovieCache.putSubtitleList(DetailActivity.this.mMovie.imdbId, subtitles);
