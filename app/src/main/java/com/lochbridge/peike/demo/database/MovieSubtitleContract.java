@@ -14,6 +14,7 @@ public class MovieSubtitleContract {
         public static final String BACKDROP_URL = "backdrop_url";
         public static final String TITLE = "title";
         public static final String DOUBAN_RATING = "douban_rating";
+        public static final String TOMATO_RATING = "tomato_rating";
         public static final String IMDB_RATING = "imdb_rating";
 
     }

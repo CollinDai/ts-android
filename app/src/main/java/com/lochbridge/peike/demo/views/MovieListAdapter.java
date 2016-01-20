@@ -24,6 +24,7 @@ public class MovieListAdapter extends BaseAdapter {
     private LayoutInflater mInflater;
     private List<Movie> mHotMovies;
     private Context context;
+
     public MovieListAdapter(Context context) {
         this.context = context;
         mInflater = LayoutInflater.from(context);
@@ -56,9 +57,10 @@ public class MovieListAdapter extends BaseAdapter {
             if (convertView == null) {
                 View v = this.mInflater.inflate(R.layout.list_item, parent, false);
                 holder = new ViewHolder();
+                holder.rankingNumber = (TextView) v.findViewById(R.id.ranking_number);
                 holder.primaryText = (TextView) v.findViewById(R.id.primary_text);
                 holder.imdbRating = (TextView) v.findViewById(R.id.imdb_rating);
-                holder.doubanRating = (TextView) v.findViewById(R.id.douban_rating);
+                holder.tomatoRating = (TextView) v.findViewById(R.id.tomato_rating);
                 holder.imageView = (NetworkImageView) v.findViewById(R.id.item_avatar);
                 v.setTag(holder);
                 convertView = v;
@@ -66,9 +68,11 @@ public class MovieListAdapter extends BaseAdapter {
                 holder = (ViewHolder) convertView.getTag();
             }
             Movie m = mHotMovies.get(position);
+            String ranking = String.valueOf(position + 1) + ". ";
+            holder.rankingNumber.setText(ranking);
             holder.primaryText.setText(m.title);
             holder.imdbRating.setText(m.imdbRating);
-            holder.doubanRating.setText(m.doubanRating);
+            holder.tomatoRating.setText(m.tomatoRating);
             holder.primaryText.setTag(m.imdbId);
             holder.imageView.setTag(m.backdropUrl);
             if (URLUtil.isValidUrl(m.posterUrl)) {
@@ -80,9 +84,10 @@ public class MovieListAdapter extends BaseAdapter {
 
     static class ViewHolder {
         NetworkImageView imageView;
+        TextView rankingNumber;
         TextView primaryText;
         TextView imdbRating;
-        TextView doubanRating;
+        TextView tomatoRating;
 
     }
 }

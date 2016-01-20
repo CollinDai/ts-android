@@ -62,7 +62,7 @@ public class LocalMovieAdapter extends BaseAdapter {
                 View view = layoutInflater.inflate(R.layout.grid_item, parent, false);
                 holder.posterImgView = (NetworkImageView) view.findViewById(R.id.item_avatar);
                 holder.titleView = (TextView) view.findViewById(R.id.primary_text);
-                holder.doubanRatingView = (TextView) view.findViewById(R.id.douban_rating);
+                holder.tomatoRatingView = (TextView) view.findViewById(R.id.tomato_rating);
                 holder.imdbRatingView = (TextView) view.findViewById(R.id.imdb_rating);
                 convertView = view;
                 convertView.setTag(holder);
@@ -71,7 +71,7 @@ public class LocalMovieAdapter extends BaseAdapter {
             }
             Movie movie = localMovies.get(position);
             holder.titleView.setText(movie.title);
-            holder.doubanRatingView.setText(movie.doubanRating);
+            holder.tomatoRatingView.setText(movie.tomatoRating);
             holder.imdbRatingView.setText(movie.imdbRating);
             holder.titleView.setTag(movie.imdbId);
             holder.posterImgView.setTag(movie.backdropUrl);
@@ -85,7 +85,7 @@ public class LocalMovieAdapter extends BaseAdapter {
     class ViewHolder {
         NetworkImageView posterImgView;
         TextView titleView;
-        TextView doubanRatingView;
+        TextView tomatoRatingView;
         TextView imdbRatingView;
     }
 }

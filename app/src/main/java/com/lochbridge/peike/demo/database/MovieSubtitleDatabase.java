@@ -5,6 +5,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.BaseColumns;
 
+import com.lochbridge.peike.demo.model.Movie;
+
 /**
  * Created by Peike on 12/28/2015.
  */
@@ -35,8 +37,9 @@ public class MovieSubtitleDatabase extends SQLiteOpenHelper {
                 + MovieSubtitleContract.Movies.TITLE + " TEXT NOT NULL,"
                 + MovieSubtitleContract.Movies.POSTER_URL + " TEXT NOT NULL,"
                 + MovieSubtitleContract.Movies.BACKDROP_URL + " TEXT NOT NULL,"
-                + MovieSubtitleContract.Movies.DOUBAN_RATING + " TEXT NOT NULL,"
-                + MovieSubtitleContract.Movies.IMDB_RATING + " TEXT NOT NULL)");
+                + MovieSubtitleContract.Movies.DOUBAN_RATING + " TEXT,"
+                + MovieSubtitleContract.Movies.TOMATO_RATING + " TEXT,"
+                + MovieSubtitleContract.Movies.IMDB_RATING + " TEXT)");
         db.execSQL("CREATE TABLE " + SUBTITLES + " ("
                 + BaseColumns._ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
                 + MovieSubtitleContract.Movies.IMDB_ID + " TEXT NOT NULL,"

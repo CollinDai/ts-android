@@ -30,7 +30,7 @@ public class BaseMovieListFragment extends Fragment {
                 TextView titleView = (TextView) viewClicked.findViewById(R.id.primary_text);
                 NetworkImageView posterView = (NetworkImageView) viewClicked.findViewById(R.id.item_avatar);
                 TextView imdbRatingView = (TextView) viewClicked.findViewById(R.id.imdb_rating);
-                TextView doubanRatingView = (TextView) viewClicked.findViewById(R.id.douban_rating);
+                TextView tomatoRatingView = (TextView) viewClicked.findViewById(R.id.tomato_rating);
 
                 Movie movie = new Movie();
                 movie.title = titleView.getText().toString();
@@ -38,7 +38,7 @@ public class BaseMovieListFragment extends Fragment {
                 movie.posterUrl = posterView.getImageURL();
                 movie.backdropUrl = (String) posterView.getTag();
                 movie.imdbRating = imdbRatingView.getText().toString();
-                movie.doubanRating = doubanRatingView.getText().toString();
+                movie.tomatoRating = tomatoRatingView.getText().toString();
 
                 Intent intent = new Intent(getActivity(), DetailActivity.class);
                 intent.putExtra(Constants.EXTRA_MOVIE, movie);

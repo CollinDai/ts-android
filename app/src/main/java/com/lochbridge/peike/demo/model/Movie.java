@@ -16,6 +16,7 @@ public class Movie implements Parcelable {
     public String imdbId;
     public String doubanRating;
     public String imdbRating;
+    public String tomatoRating;
     public List<Subtitle> subtitles;
 
     public Movie() {}
@@ -27,6 +28,7 @@ public class Movie implements Parcelable {
         imdbId = in.readString();
         doubanRating = in.readString();
         imdbRating = in.readString();
+        tomatoRating = in.readString();
     }
 
     public static final Creator<Movie> CREATOR = new Creator<Movie>() {
@@ -54,5 +56,6 @@ public class Movie implements Parcelable {
         dest.writeString(imdbId);
         dest.writeString(doubanRating);
         dest.writeString(imdbRating);
+        dest.writeString(tomatoRating);
     }
 }

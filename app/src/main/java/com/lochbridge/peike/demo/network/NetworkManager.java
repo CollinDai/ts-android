@@ -46,7 +46,7 @@ public class NetworkManager {
                         movie.imdbId = movieResp.getString("imdb_id");
                         movie.posterUrl = movieResp.getString("poster_url");
                         movie.backdropUrl = movieResp.getString("backdrop_url");
-                        movie.doubanRating = movieResp.getString("douban_rating");
+                        movie.tomatoRating = movieResp.getString("tomato_meter");
                         movie.imdbRating = movieResp.getString("imdb_rating");
                         result.add(movie);
                     }
@@ -93,7 +93,7 @@ public class NetworkManager {
                         movie.posterUrl = jsonObject.getString("poster_url");
                         movie.backdropUrl = jsonObject.getString("backdrop_url");
                         movie.imdbRating = jsonObject.getString("imdb_rating");
-                        movie.doubanRating = jsonObject.getString("douban_rating");
+                        movie.tomatoRating = jsonObject.getString("tomato_rating");
                         result.add(movie);
                     }
                 } catch (JSONException e) {
@@ -159,6 +159,7 @@ public class NetworkManager {
 
     public static void download(final Context context, int fileId, final Callback<String> callback) {
         String url = SUBTITLE_DOWNLOAD_URL + fileId;
+        Log.d(LOGTAG, "Download subtitle from: " + url);
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
                 new Response.Listener<String>() {
                     @Override

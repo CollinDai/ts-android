@@ -156,13 +156,15 @@ public class SubtitleDialogFragment extends DialogFragment {
             SubtitleFileManager.downloadSubtitle(getActivity(), subId, new NetworkManager.Callback<String>() {
                 @Override
                 public void onResponse(String s) {
-                    if (s.charAt(0) == '\uFEFF') {
-                        Log.d(LOG_TAG, "Downloaded file has BOM.");
+                    if (s != null && !s.isEmpty()) {
+                        if (s.charAt(0) == '\uFEFF') {
+                            Log.d(LOG_TAG, "Downloaded file has BOM.");
+                        }
+                        SubtitleFileManager.putSubtitle(getActivity(), subId, s);
+                        StorageUtil.writeSubtitleToDB(getActivity(), mSubtitle);
+                        mListener.persistMovieToDB();
+                        toggleSubDialogButtons(true);
                     }
-                    SubtitleFileManager.putSubtitle(getActivity(), subId, s);
-                    StorageUtil.writeSubtitleToDB(getActivity(), mSubtitle);
-                    mListener.persistMovieToDB();
-                    toggleSubDialogButtons(true);
                     ProgressDialogUtil.hide();
                 }
             });

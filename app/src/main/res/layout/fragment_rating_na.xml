@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/secondary_text"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:singleLine="true">
+
+    <TextView
+        android:id="@+id/imdb_rating"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="7.8/10"
+        android:drawablePadding="8dp"
+        android:drawableLeft="@drawable/ic_imdb"/>
+
+    <TextView
+        android:layout_marginLeft="16dp"
+        android:id="@+id/tomato_rating"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="6.3/10"
+        android:drawablePadding="8dp"
+        android:drawableLeft="@drawable/ic_tomato"/>
+</LinearLayout>
