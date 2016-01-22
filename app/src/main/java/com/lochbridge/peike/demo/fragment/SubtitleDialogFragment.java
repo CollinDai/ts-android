@@ -133,9 +133,8 @@ public class SubtitleDialogFragment extends DialogFragment {
     private void onStartSubClick() {
         // start sub view activity, pass the sub file name
         // as intent arguments.
-        Intent intent = new Intent(getActivity(), PlayerActivity.class);
-        intent.putExtra(Constants.EXTRA_SUB_ID, mSubtitle.fileId);
-        startActivity(intent);
+        mListener.startPlayer(mSubtitle.fileId);
+        this.dismiss();
     }
 
     private void onDownOrDelClicked() {
@@ -233,5 +232,6 @@ public class SubtitleDialogFragment extends DialogFragment {
 
     public interface OnFragmentInteractionListener {
         void persistMovieToDB();
+        void startPlayer(int subFileId);
     }
 }

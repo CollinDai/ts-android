@@ -117,4 +117,12 @@ public class DetailActivity extends AppCompatActivity implements LanguageDialogF
         if (StorageUtil.isMovieExist(this, this.mMovie.imdbId)) return;
         StorageUtil.writeMovieToDB(this, mMovie);
     }
+
+    @Override
+    public void startPlayer(int subFileId) {
+        Intent intent = new Intent(this, PlayerActivity.class);
+        intent.putExtra(Constants.EXTRA_SUB_ID, subFileId);
+        intent.putExtra(Constants.EXTRA_TITLE, mMovie.title);
+        startActivity(intent);
+    }
 }

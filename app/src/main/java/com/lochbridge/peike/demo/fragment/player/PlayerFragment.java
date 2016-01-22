@@ -18,11 +18,16 @@ import java.util.List;
  * A simple {@link Fragment} subclass.
  */
 public abstract class PlayerFragment extends Fragment {
+    public interface TimerControlListener {
+        void startTimer();
+        void setTimer(int millisecond);
+    }
     public static final int SIMPLE_THEME = 0;
     protected List<SRTItem> mSubContent;
     public PlayerFragment() {
         // Required empty public constructor
     }
+
 
     class ReadFileTask extends AsyncTask<String, SRTItem, Boolean> {
 

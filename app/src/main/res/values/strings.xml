@@ -40,4 +40,6 @@
     <string name="colon">:</string>
     <string name="empty_local">No local subtitles found.</string>
     <string name="processing">Processing...</string>
+    <string name="prev_sub">Previous subtitle</string>
+    <string name="next_sub">Next subtitle</string>
 </resources>

@@ -3,6 +3,7 @@ package com.lochbridge.peike.demo.fragment;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.SystemClock;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,32 +30,34 @@ public class TimerFragment extends Fragment {
     }
 
     @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        startTime = System.currentTimeMillis();
-        timerHandler.postDelayed(timerRunnable, 0);
-    }
-
-    @Override
     public void onPause() {
         super.onPause();
         timerHandler.removeCallbacks(timerRunnable);
+    }
+
+    public void startTimer() {
+        startTime = SystemClock.uptimeMillis();
+        timerHandler.postDelayed(timerRunnable, 0);
+    }
+
+    public void setTimer(int millisecond) {
+        startTime = SystemClock.uptimeMillis() - millisecond;
     }
 
     class TimerRunnable implements Runnable {
 
         @Override
         public void run() {
-            long millis = getPlayerCurrentTime() - startTime;
-            int seconds = (int) (millis / 1000);
-            int minutes = seconds / 60;
-            seconds = seconds % 60;
-
-            minAndSecView.setText(String.format("%d:%02d", minutes, seconds));
+            long millis = SystemClock.uptimeMillis() - startTime;
+            minAndSecView.setText(millisToTime(millis));
             timerHandler.postDelayed(this, 500);
         }
 
-        long getPlayerCurrentTime() {
-            return System.currentTimeMillis();
+        private String millisToTime(long millisecond) {
+            int seconds = (int) (millisecond / 1000);
+            int minutes = seconds / 60;
+            seconds = seconds % 60;
+            return String.format("%d:%02d", minutes, seconds);
         }
     }
 }

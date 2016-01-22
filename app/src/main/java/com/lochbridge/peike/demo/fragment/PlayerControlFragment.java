@@ -10,13 +10,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 
 import com.lochbridge.peike.demo.PlayerActivity;
 import com.lochbridge.peike.demo.R;
 
-/**
- * Created by Peike on 1/10/2016.
- */
 public class PlayerControlFragment extends Fragment {
 
     private static final String LOG_TAG = "PlayerControlFragment";
@@ -24,10 +22,13 @@ public class PlayerControlFragment extends Fragment {
     public interface PlayerControlListener {
         void nextTapped();
         void previousTapped();
+
+        void toggleControlVisibility();
     }
 
-    private Button nextSubButton;
-    private Button previousButton;
+    private ImageButton nextSubButton;
+    private ImageButton previousButton;
+    private Button displayToggleButton;
     private PlayerControlListener controlListener;
 
     @Override
@@ -44,7 +45,7 @@ public class PlayerControlFragment extends Fragment {
     }
 
     /**
-     * For before API 23
+     * For before Android 6.0
      * @param activity
      */
     @Override
@@ -60,6 +61,12 @@ public class PlayerControlFragment extends Fragment {
         }
     }
 
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -68,8 +75,9 @@ public class PlayerControlFragment extends Fragment {
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-        nextSubButton = (Button) view.findViewById(R.id.next_sub_button);
-        previousButton = (Button) view.findViewById(R.id.previous_sub_button);
+        nextSubButton = (ImageButton) view.findViewById(R.id.next_sub_button);
+        previousButton = (ImageButton) view.findViewById(R.id.previous_sub_button);
+        displayToggleButton = (Button) view.findViewById(R.id.hidden_button);
         nextSubButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -80,6 +88,12 @@ public class PlayerControlFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 PlayerControlFragment.this.controlListener.previousTapped();
+            }
+        });
+        displayToggleButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                controlListener.toggleControlVisibility();
             }
         });
     }

@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.lochbridge.peike.demo.PlayerActivity;
 import com.lochbridge.peike.demo.R;
 import com.lochbridge.peike.demo.manager.SubtitleFileManager;
 import com.lochbridge.peike.demo.model.SRTItem;
@@ -20,11 +21,14 @@ import java.lang.ref.WeakReference;
 import java.util.List;
 
 public class SimplePlayerFragment extends PlayerFragment {
+
     private static final String LOG_TAG = "SimplePlayerFragment";
     private TextView subTextView;
     private int mSubId;
     private SubMsgHandler subMsgHandler;
     private ReadFileThread thread;
+    private TimerControlListener timerControlListener;
+
 
     public static SimplePlayerFragment newInstance(int subId) {
 
@@ -39,6 +43,9 @@ public class SimplePlayerFragment extends PlayerFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.mSubId = getArguments().getInt(Constants.ARG_SUB_ID);
+        if (getActivity() instanceof PlayerActivity) {
+            timerControlListener = (PlayerActivity) getActivity();
+        }
         subMsgHandler = new SubMsgHandler(this);
     }
 
@@ -68,6 +75,12 @@ public class SimplePlayerFragment extends PlayerFragment {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        timerControlListener = null;
     }
 
     private void startPlaying() {
@@ -130,7 +143,10 @@ public class SimplePlayerFragment extends PlayerFragment {
                 sendMessage("Subtitle file is not valid.", false);
                 return;
             }
+
+            timerControlListener.startTimer();
             sendMessage("", false);
+
             currentNode = subDataObjList.get(0);
             try {
                 iteration:
@@ -143,7 +159,10 @@ public class SimplePlayerFragment extends PlayerFragment {
                         Thread.sleep(10);
                         endTime = SystemClock.uptimeMillis();
                     } while (endTime - startTime < sleepTime && !gotKickOff);
+
+                    timerControlListener.setTimer(currentNode.startTimeMilli);
                     sendMessage(currentNode.text, true);
+
                 } while (currentNode != null && !stopFlag);
             } catch (InterruptedException e) {
                 e.printStackTrace();
